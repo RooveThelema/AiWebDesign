@@ -1,0 +1,7 @@
+<svg width="46" height="46" viewBox="0 0 128 128" role="img" aria-label="Клевер" xmlns="http://www.w3.org/2000/svg">
+  <rect width="128" height="128" rx="29" fill="#1E1E1E"/>
+  <path d="M64 74c3 11 2 20-5 29" fill="none" stroke="#80CFCD" stroke-width="7" stroke-linecap="round"/>
+  <path fill="#D7F4F2" d="M64 61c-5-3-17-12-18-22-1-10 10-16 18-8 8-8 19-2 18 8-1 10-13 19-18 22Z"/>
+  <path fill="#80CFCD" d="M59 69c-5-7-16-18-26-15-10 2-12 14-4 20-1 10 10 16 18 11 6-4 10-11 12-16Z"/>
+  <path fill="#D7F4F2" d="M69 69c5-7 16-18 26-15 10 2 12 14 4 20 1 10-10 16-18 11-6-4-10-11-12-16Z"/>
+</svg>

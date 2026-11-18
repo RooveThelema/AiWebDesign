@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>02 · High-Contrast Neo-Swiss — Экран входа ЮУТУ / УРК</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./studio.css">
+  <style>
+    /* Variant 02 Tokens: High-Contrast Neo-Swiss */
+    .phone-screen {
+      --canvas: #FFFFFF;
+      --ink: #1E1E1E;
+      --border: #1E1E1E;
+      --hairline: #D4D8D7;
+      --accent: #009F9B;
+      --accent-soft: #D7F4F2;
+      --error: #D12B2B;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .swiss-grid {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .swiss-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    .swiss-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .swiss-brand-text {
+      font-family: "Unbounded", sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .swiss-index {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .swiss-hero {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .swiss-kicker {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .swiss-title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 27px;
+      line-height: 1.12;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-top: 8px;
+    }
+
+    /* 2-column architectural tiles for institution */
+    .org-radio {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .swiss-org-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    .swiss-tile {
+      min-height: 82px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.12s ease;
+    }
+
+    .swiss-tile:first-of-type {
+      border-right: 1.5px solid var(--border);
+    }
+
+    .tile-num {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: #6B7372;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tile-dot {
+      width: 10px;
+      height: 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 0;
+    }
+
+    .tile-title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .tile-sub {
+      font-size: 11px;
+      color: #5C6564;
+      margin-top: 2px;
+    }
+
+    #org2-vuz:checked ~ .swiss-org-grid label[for="org2-vuz"],
+    #org2-col:checked ~ .swiss-org-grid label[for="org2-col"] {
+      background: var(--accent-soft);
+    }
+
+    #org2-vuz:checked ~ .swiss-org-grid label[for="org2-vuz"] .tile-dot,
+    #org2-col:checked ~ .swiss-org-grid label[for="org2-col"] .tile-dot {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    #st-empty:checked ~ .studio-layout .swiss-tile {
+      background: #FFFFFF !important;
+    }
+    #st-empty:checked ~ .studio-layout .tile-dot {
+      background: transparent !important;
+      border-color: var(--border) !important;
+    }
+
+    /* Form section */
+    .swiss-form {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      flex: 1;
+    }
+
+    .swiss-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .swiss-label {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #4D5554;
+    }
+
+    .swiss-input {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 10px;
+      border: 1px solid #C8CECD;
+      border-bottom: 2px solid var(--border);
+      border-radius: 2px;
+      background: #FAFAFA;
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .swiss-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      border-bottom-color: var(--accent);
+      background: #FFFFFF;
+    }
+
+    .swiss-error-box {
+      padding: 12px;
+      border: 1.5px solid var(--error);
+      background: #FFF3F3;
+      font-size: 13px;
+      line-height: 1.4;
+      color: #8E1A1A;
+      border-radius: 2px;
+    }
+
+    #st-error:checked ~ .studio-layout .swiss-input {
+      border-bottom-color: var(--error);
+    }
+
+    .swiss-long-meta {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      line-height: 1.45;
+      padding: 10px 12px;
+      border-left: 3px solid var(--accent);
+      background: #F4F7F7;
+      color: #2E3434;
+    }
+
+    .swiss-footnote {
+      margin-top: auto;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #636B6A;
+    }
+
+    /* Split 30 / 70 bottom CTA grid */
+    .swiss-bottom-bar {
+      display: grid;
+      grid-template-columns: 34% 66%;
+      border-top: 1.5px solid var(--border);
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .swiss-btn-sec {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #FFFFFF;
+      color: var(--ink);
+      text-decoration: none;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      border-right: 1.5px solid var(--border);
+    }
+
+    .swiss-btn-sec:hover {
+      background: #F4F6F6;
+    }
+
+    .swiss-btn-prim {
+      min-height: 58px;
+      border: none;
+      border-radius: 0;
+      background: var(--accent);
+      color: #FFFFFF;
+      font-family: "Unbounded", sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    .swiss-btn-prim:hover {
+      background: #008A87;
+    }
+
+    #st-empty:checked ~ .studio-layout .swiss-btn-prim {
+      background: #1E1E1E;
+      opacity: 0.45;
+    }
+  </style>
+</head>
+<body>
+  <div class="studio-stage">
+    <input class="state-radio" type="radio" name="preview-state" id="st-normal" checked>
+    <input class="state-radio" type="radio" name="preview-state" id="st-empty">
+    <input class="state-radio" type="radio" name="preview-state" id="st-error">
+    <input class="state-radio" type="radio" name="preview-state" id="st-long">
+
+    <header class="studio-topbar">
+      <div class="studio-crumb">
+        <a class="studio-back" href="./index.html">← Все 10 вариантов</a>
+        <div class="studio-nav-pills">
+          <a href="./01-tactile-thumb-dock.html">01</a>
+          <a class="is-current" href="./02-neo-swiss-editorial.html">02</a>
+          <a href="./03-dark-campus-obsidian.html">03</a>
+          <a href="./04-auto-parse-minimal.html">04</a>
+          <a href="./05-brutalist-utility-grid.html">05</a>
+          <a href="./06-split-campus-ribbon.html">06</a>
+          <a href="./07-bottom-sheet-stepped.html">07</a>
+          <a href="./08-cardless-atelier-line.html">08</a>
+          <a href="./09-keyboard-ready-compact.html">09</a>
+          <a href="./10-architectural-monolith.html">10</a>
+        </div>
+      </div>
+      <div class="state-switcher">
+        <span class="state-switcher-label">Состояние:</span>
+        <label class="state-pill" for="st-normal">Обычный</label>
+        <label class="state-pill" for="st-empty">Пусто</label>
+        <label class="state-pill" for="st-error">Ошибка ЭИОС</label>
+        <label class="state-pill" for="st-long">Длинное имя</label>
+      </div>
+    </header>
+
+    <main class="studio-layout">
+      <div class="phone-bezel">
+        <div class="phone-screen">
+          <div class="ios-statusbar">
+            <span>09:41</span>
+            <div class="dynamic-island"></div>
+            <div class="ios-status-icons"><span>LTE</span><span>100%</span></div>
+          </div>
+
+          <div class="swiss-grid">
+            <div class="swiss-header">
+              <div class="swiss-brand">
+                <svg width="32" height="32" viewBox="0 0 128 128" role="img" aria-label="Клевер" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="128" height="128" rx="29" fill="#1E1E1E"/>
+                  <path d="M64 74c3 11 2 20-5 29" fill="none" stroke="#009F9B" stroke-width="7" stroke-linecap="round"/>
+                  <path fill="#D7F4F2" d="M64 61c-5-3-17-12-18-22-1-10 10-16 18-8 8-8 19-2 18 8-1 10-13 19-18 22Z"/>
+                  <path fill="#009F9B" d="M59 69c-5-7-16-18-26-15-10 2-12 14-4 20-1 10 10 16 18 11 6-4 10-11 12-16Z"/>
+                  <path fill="#D7F4F2" d="M69 69c5-7 16-18 26-15 10 2 12 14 4 20 1 10-10 16-18 11-6-4-10-11-12-16Z"/>
+                </svg>
+                <span class="swiss-brand-text">Клевер</span>
+              </div>
+              <span class="swiss-index">API · 01</span>
+            </div>
+
+            <div class="swiss-hero">
+              <div class="swiss-kicker">Авторизация · Инобортех API</div>
+              <h1 class="swiss-title">Личный<br>кабинет</h1>
+            </div>
+
+            <input class="org-radio" type="radio" name="org-02" id="org2-vuz" checked>
+            <input class="org-radio" type="radio" name="org-02" id="org2-col">
+
+            <div class="swiss-org-grid">
+              <label class="swiss-tile" for="org2-vuz">
+                <div class="tile-num">
+                  <span>01 / ВУЗ</span>
+                  <span class="tile-dot"></span>
+                </div>
+                <div>
+                  <div class="tile-title">ЮУТУ</div>
+                  <div class="tile-sub">Университет</div>
+                </div>
+              </label>
+
+              <label class="swiss-tile" for="org2-col">
+                <div class="tile-num">
+                  <span>02 / СПО</span>
+                  <span class="tile-dot"></span>
+                </div>
+                <div>
+                  <div class="tile-title">УРК</div>
+                  <div class="tile-sub">Колледж</div>
+                </div>
+              </label>
+            </div>
+
+            <div class="swiss-form">
+              <div class="swiss-field">
+                <label class="swiss-label" for="login-02">Логин студента</label>
+                <input id="login-02" class="swiss-input only-normal" type="text" value="d.sokolov@inueco.ru">
+                <input class="swiss-input only-empty" type="text" value="" placeholder="Введите логин ЭИОС">
+                <input class="swiss-input only-error" type="text" value="d.sokolov@inueco.ru">
+                <input class="swiss-input only-long" type="text" value="rozhdestvenskiy.konstantin.2025@inueco.ru">
+              </div>
+
+              <div class="swiss-field">
+                <label class="swiss-label" for="pass-02">Пароль</label>
+                <input id="pass-02" class="swiss-input only-normal" type="password" value="••••••••••">
+                <input class="swiss-input only-empty" type="password" value="" placeholder="••••••••">
+                <input class="swiss-input only-error" type="password" value="••••">
+                <input class="swiss-input only-long" type="password" value="••••••••••••">
+              </div>
+
+              <div class="swiss-error-box only-error">
+                <strong>Ошибка 401:</strong> Пара логин/пароль не найдена в базе ЮУТУ. Проверьте организацию (01/02).
+              </div>
+
+              <div class="swiss-long-meta only-long">
+                Южно-Уральский технологический университет · Очно-заочное · Рождественский-Константинопольский К.В.
+              </div>
+
+              <div class="swiss-footnote only-normal">
+                После входа автоматически подгрузятся QR-пропуск и актуальное расписание.
+              </div>
+              <div class="swiss-footnote only-empty">
+                Выберите корпус (01 или 02) и введите данные от вашей учётной записи.
+              </div>
+            </div>
+
+            <div class="swiss-bottom-bar">
+              <a class="swiss-btn-sec" href="#help">Помощь</a>
+              <button type="button" class="swiss-btn-prim">
+                <span>Войти</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="ios-home-bar-wrap">
+            <div class="ios-home-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="spec-panel">
+        <div>
+          <span class="spec-kicker">Вариант 02 / 10 · Экран входа</span>
+          <h2 class="spec-title">High-Contrast Neo-Swiss</h2>
+          <p class="spec-lead">Жёсткая швейцарская сетка на линиях 1.5px без скруглённых карточек и теней. Выбор вуз/колледж вынесен в две равные архитектурные ячейки 01 / 02.</p>
+        </div>
+
+        <div class="spec-grid">
+          <div class="spec-block">
+            <div class="spec-block-label">Палитра (3 роли)</div>
+            <div class="swatches">
+              <div class="swatch-row"><span class="swatch-dot" style="background:#FFFFFF"></span>#FFFFFF Canvas</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#1E1E1E"></span>#1E1E1E Линии и текст</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#009F9B"></span>#009F9B / #D7F4F2 Тил</div>
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Типографика</div>
+            <div class="spec-block-val">
+              Display: Unbounded 800<br>
+              Body: IBM Plex Sans<br>
+              Index: IBM Plex Mono
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Скругления</div>
+            <div class="spec-block-val">
+              Плитки 01/02: 0px<br>
+              Поля ввода: 2px<br>
+              Нижний сплит-бар: 0px
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Расположение кнопок</div>
+            <div class="spec-block-val">
+              Двойной нижний сплит 34/66: «Помощь» слева + широкая кнопка «Войти →» справа на границе экрана.
+            </div>
+          </div>
+        </div>
+
+        <div class="spec-notes">
+          <strong>Логотип «Клевер» (ЮУТУ-палитра):</strong> Угольный фон <code>#1E1E1E</code>, светлая мята <code>#D7F4F2</code> на верхнем и правом листьях, основной тил <code>#009F9B</code> на левом листе и стебле.
+        </div>
+
+        <div class="spec-footer-nav">
+          <a class="spec-btn-link" href="./01-tactile-thumb-dock.html">← Вариант 01</a>
+          <a class="spec-btn-link is-primary" href="./03-dark-campus-obsidian.html">Вариант 03 →</a>
+        </div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

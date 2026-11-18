@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>07 · Thumb-First Bottom Sheet — Экран входа ЮУТУ / УРК</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./studio.css">
+  <style>
+    /* Variant 07 Tokens: Thumb-First Bottom Sheet */
+    .phone-screen {
+      --canvas: #F6F6F6;
+      --surface: #FFFFFF;
+      --border: #DEE3E2;
+      --ink: #1E1E1E;
+      --muted: #66706F;
+      --accent: #009F9B;
+      --accent-soft: #D7F4F2;
+      --error: #D12B2B;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: "Golos Text", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .thumb-shell {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Calm negative space in upper 38% */
+    .upper-breath {
+      padding: 28px 26px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .upper-clover {
+      width: 54px;
+      height: 54px;
+      display: block;
+    }
+
+    .upper-title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 26px;
+      line-height: 1.15;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .upper-sub {
+      font-size: 14px;
+      line-height: 1.48;
+      color: var(--muted);
+      max-width: 290px;
+    }
+
+    /* All controls anchored inside lower 60% sheet */
+    .lower-sheet {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 22px 24px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .org-radio {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .pill-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .pill-choice {
+      flex: 1;
+      min-height: 44px;
+      padding: 0 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #F6F6F6;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 99px;
+      background: #C4CCCB;
+    }
+
+    #org7-vuz:checked ~ .pill-row label[for="org7-vuz"],
+    #org7-col:checked ~ .pill-row label[for="org7-col"] {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: #006663;
+    }
+
+    #org7-vuz:checked ~ .pill-row label[for="org7-vuz"] .pill-dot,
+    #org7-col:checked ~ .pill-row label[for="org7-col"] .pill-dot {
+      background: var(--accent);
+    }
+
+    #st-empty:checked ~ .studio-layout .pill-choice {
+      background: #F6F6F6 !important;
+      border-color: var(--border) !important;
+      color: var(--muted) !important;
+    }
+    #st-empty:checked ~ .studio-layout .pill-dot {
+      background: #C4CCCB !important;
+    }
+
+    .sheet-input-07 {
+      width: 100%;
+      min-height: 50px;
+      padding: 12px 14px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--ink);
+    }
+
+    .sheet-input-07:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .error-07 {
+      padding: 10px 12px;
+      background: #FFF1F1;
+      border: 1px solid #F2BABA;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: #8F1B1B;
+    }
+
+    #st-error:checked ~ .studio-layout .sheet-input-07 {
+      border-color: var(--error);
+    }
+
+    .long-07 {
+      padding: 9px 12px;
+      background: #F6F6F6;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--muted);
+    }
+
+    /* Side-by-side dual action footer */
+    .action-duo {
+      margin-top: 6px;
+      display: grid;
+      grid-template-columns: 36% 1fr;
+      gap: 10px;
+    }
+
+    .btn-ghost-07 {
+      min-height: 52px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #F6F6F6;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-main-07 {
+      min-height: 52px;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: #FFFFFF;
+      font-family: "Unbounded", sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-main-07:hover {
+      background: #008A87;
+    }
+
+    #st-empty:checked ~ .studio-layout .btn-main-07 {
+      background: #CFD6D5;
+      color: #6B7574;
+    }
+
+    .sheet-home-07 {
+      background: #FFFFFF;
+    }
+  </style>
+</head>
+<body>
+  <div class="studio-stage">
+    <input class="state-radio" type="radio" name="preview-state" id="st-normal" checked>
+    <input class="state-radio" type="radio" name="preview-state" id="st-empty">
+    <input class="state-radio" type="radio" name="preview-state" id="st-error">
+    <input class="state-radio" type="radio" name="preview-state" id="st-long">
+
+    <header class="studio-topbar">
+      <div class="studio-crumb">
+        <a class="studio-back" href="./index.html">← Все 10 вариантов</a>
+        <div class="studio-nav-pills">
+          <a href="./01-tactile-thumb-dock.html">01</a>
+          <a href="./02-neo-swiss-editorial.html">02</a>
+          <a href="./03-dark-campus-obsidian.html">03</a>
+          <a href="./04-auto-parse-minimal.html">04</a>
+          <a href="./05-brutalist-utility-grid.html">05</a>
+          <a href="./06-split-campus-ribbon.html">06</a>
+          <a class="is-current" href="./07-bottom-sheet-stepped.html">07</a>
+          <a href="./08-cardless-atelier-line.html">08</a>
+          <a href="./09-keyboard-ready-compact.html">09</a>
+          <a href="./10-architectural-monolith.html">10</a>
+        </div>
+      </div>
+      <div class="state-switcher">
+        <span class="state-switcher-label">Состояние:</span>
+        <label class="state-pill" for="st-normal">Обычный</label>
+        <label class="state-pill" for="st-empty">Пусто</label>
+        <label class="state-pill" for="st-error">Ошибка ЭИОС</label>
+        <label class="state-pill" for="st-long">Длинное имя</label>
+      </div>
+    </header>
+
+    <main class="studio-layout">
+      <div class="phone-bezel">
+        <div class="phone-screen">
+          <div class="ios-statusbar">
+            <span>09:41</span>
+            <div class="dynamic-island"></div>
+            <div class="ios-status-icons"><span>5G</span><span>100%</span></div>
+          </div>
+
+          <div class="thumb-shell">
+            <div class="upper-breath">
+              <svg class="upper-clover" width="54" height="54" viewBox="0 0 128 128" role="img" aria-label="Клевер" xmlns="http://www.w3.org/2000/svg">
+                <rect width="128" height="128" rx="29" fill="#009F9B"/>
+                <path d="M64 74c3 11 2 20-5 29" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round"/>
+                <path fill="#D7F4F2" d="M64 61c-5-3-17-12-18-22-1-10 10-16 18-8 8-8 19-2 18 8-1 10-13 19-18 22Z"/>
+                <path fill="#FFFFFF" d="M59 69c-5-7-16-18-26-15-10 2-12 14-4 20-1 10 10 16 18 11 6-4 10-11 12-16Z"/>
+                <path fill="#D7F4F2" d="M69 69c5-7 16-18 26-15 10 2 12 14 4 20 1 10-10 16-18 11-6-4-10-11-12-16Z"/>
+              </svg>
+              <h1 class="upper-title">Клевер</h1>
+              <p class="upper-sub">Расписание пар, QR-пропуск и мгновенные уведомления об изменениях без почты.</p>
+            </div>
+
+            <div class="lower-sheet">
+              <input class="org-radio" type="radio" name="org-07" id="org7-vuz" checked>
+              <input class="org-radio" type="radio" name="org-07" id="org7-col">
+
+              <div class="pill-row">
+                <label class="pill-choice" for="org7-vuz">
+                  <span class="pill-dot"></span>
+                  <span>ЮУТУ · Вуз</span>
+                </label>
+                <label class="pill-choice" for="org7-col">
+                  <span class="pill-dot"></span>
+                  <span>УРК · Колледж</span>
+                </label>
+              </div>
+
+              <input class="sheet-input-07 only-normal" type="text" value="e.kuznetsova@inueco.ru" aria-label="Логин">
+              <input class="sheet-input-07 only-empty" type="text" value="" placeholder="Логин Инобортех">
+              <input class="sheet-input-07 only-error" type="text" value="e.kuznetsova@inueco.ru">
+              <input class="sheet-input-07 only-long" type="text" value="pokrovskaya-veselova.anastasiya@inueco.ru">
+
+              <input class="sheet-input-07 only-normal" type="password" value="••••••••••" aria-label="Пароль">
+              <input class="sheet-input-07 only-empty" type="password" value="" placeholder="Пароль">
+              <input class="sheet-input-07 only-error" type="password" value="•••••">
+              <input class="sheet-input-07 only-long" type="password" value="••••••••••••">
+
+              <div class="error-07 only-error">
+                Неверный логин или пароль. Проверьте выбранный вуз/колледж.
+              </div>
+
+              <div class="long-07 only-long">
+                Южно-Уральский технологический университет · Покровская-Веселова А.С. (гр. ИС-304)
+              </div>
+
+              <div class="action-duo">
+                <a class="btn-ghost-07" href="#help">Пароль?</a>
+                <button type="button" class="btn-main-07">
+                  <span class="only-normal">Войти</span>
+                  <span class="only-empty">Заполните</span>
+                  <span class="only-error">Повторить</span>
+                  <span class="only-long">Войти</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ios-home-bar-wrap sheet-home-07">
+            <div class="ios-home-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="spec-panel">
+        <div>
+          <span class="spec-kicker">Вариант 07 / 10 · Экран входа</span>
+          <h2 class="spec-title">Thumb-First Bottom Sheet</h2>
+          <p class="spec-lead">Эргономика под большие экраны (6.7"): верхние 38% — спокойный воздух с логотипом, а 100% кнопок и полей сведены в нижний лист в зоне досягаемости большого пальца.</p>
+        </div>
+
+        <div class="spec-grid">
+          <div class="spec-block">
+            <div class="spec-block-label">Палитра (3 роли)</div>
+            <div class="swatches">
+              <div class="swatch-row"><span class="swatch-dot" style="background:#F6F6F6"></span>#F6F6F6 Верх</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#FFFFFF"></span>#FFFFFF Лист</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#009F9B"></span>#009F9B Акцент</div>
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Типографика</div>
+            <div class="spec-block-val">
+              Display: Unbounded 700<br>
+              Body: Golos Text
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Скругления</div>
+            <div class="spec-block-val">
+              Знак логотипа: 14px<br>
+              Нижний лист: 24px (верх)<br>
+              Чипы: 8px · Инпуты: 10px<br>
+              Кнопки низа: 12px
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Расположение кнопок</div>
+            <div class="spec-block-val">
+              Горизонтальная пара внизу (36% «Пароль?» + 64% «Войти»), всё внутри нижней шторки.
+            </div>
+          </div>
+        </div>
+
+        <div class="spec-notes">
+          <strong>Логотип «Клевер» (ЮУТУ-палитра):</strong> Основной бирюзовый фон <code>#009F9B</code> с обратным акцентом лепестков — <code>#FFFFFF</code> на стебле/левом листе и <code>#D7F4F2</code> на верхнем/правом.
+        </div>
+
+        <div class="spec-footer-nav">
+          <a class="spec-btn-link" href="./06-split-campus-ribbon.html">← Вариант 06</a>
+          <a class="spec-btn-link is-primary" href="./08-cardless-atelier-line.html">Вариант 08 →</a>
+        </div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

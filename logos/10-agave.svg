@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Агава</title>
+  <rect width="128" height="128" rx="29" fill="#F4E5CE"/>
+  <g fill="#743834">
+    <path d="M64 94C49 75 47 50 63 23c12 23 19 48 1 71Z"/>
+    <path d="M54 95C34 92 23 78 19 59c16 7 29 18 35 36Z"/>
+    <path d="M74 95c20-3 31-17 35-36-16 7-29 18-35 36Z"/>
+  </g>
+  <g fill="#B85239">
+    <path d="M53 86C37 75 31 57 32 39c14 10 22 25 21 47Z"/>
+    <path d="M75 86c16-11 22-29 21-47-14 10-22 25-21 47Z"/>
+  </g>
+</svg>

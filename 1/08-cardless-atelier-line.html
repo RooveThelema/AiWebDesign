@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>08 · Cardless Atelier Line — Экран входа ЮУТУ / УРК</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./studio.css">
+  <style>
+    /* Variant 08 Tokens: Dense Editorial Utility (Zero Cards, Pure 1px Rules) */
+    .phone-screen {
+      --canvas: #F6F6F6;
+      --ink: #1E1E1E;
+      --muted: #656F6E;
+      --rule: #CFD7D6;
+      --accent: #008A87;
+      --accent-tint: #DCEFED;
+      --error: #D12B2B;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .atelier-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .atelier-top {
+      padding: 14px 22px 18px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .atelier-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .atelier-brand {
+      font-family: "Unbounded", sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .atelier-code {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .atelier-hero {
+      padding: 28px 22px 22px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .atelier-hero h1 {
+      font-family: "Unbounded", sans-serif;
+      font-size: 25px;
+      font-weight: 500;
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+    }
+
+    .atelier-hero p {
+      margin-top: 8px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* Line-by-line form rows without boxes */
+    .org-radio {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .line-row {
+      padding: 14px 22px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .line-row-inline {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 62px;
+    }
+
+    .line-label {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .inline-pills {
+      display: flex;
+      gap: 6px;
+    }
+
+    .inline-pill {
+      min-height: 44px;
+      padding: 0 14px;
+      border-radius: 6px;
+      border: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    #org8-vuz:checked ~ .inline-pills label[for="org8-vuz"],
+    #org8-col:checked ~ .inline-pills label[for="org8-col"] {
+      background: var(--accent-tint);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    #st-empty:checked ~ .studio-layout .inline-pill {
+      background: transparent !important;
+      border-color: var(--rule) !important;
+      color: var(--muted) !important;
+    }
+
+    .line-input {
+      width: 100%;
+      min-height: 44px;
+      border: none;
+      background: transparent;
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ink);
+      padding: 6px 0;
+    }
+
+    .line-input:focus {
+      outline: none;
+    }
+
+    .line-row:focus-within {
+      background: #FFFFFF;
+    }
+
+    .atelier-error {
+      margin: 16px 22px 0;
+      padding: 12px 14px;
+      border-left: 3px solid var(--error);
+      background: #FFF2F2;
+      font-size: 13px;
+      line-height: 1.4;
+      color: #8F1B1B;
+    }
+
+    .atelier-long {
+      padding: 12px 22px;
+      border-bottom: 1px solid var(--rule);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      line-height: 1.45;
+      color: var(--accent);
+      background: #EEF4F3;
+    }
+
+    .atelier-bottom {
+      margin-top: auto;
+      padding: 16px 22px 12px;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .atelier-hint-link {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .atelier-hint-link strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .atelier-cta {
+      width: 100%;
+      min-height: 52px;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: #FFFFFF;
+      font-family: "Unbounded", sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .atelier-cta:hover {
+      background: #007471;
+    }
+
+    #st-empty:checked ~ .studio-layout .atelier-cta {
+      background: #CBD3D2;
+      color: #6B7574;
+    }
+  </style>
+</head>
+<body>
+  <div class="studio-stage">
+    <input class="state-radio" type="radio" name="preview-state" id="st-normal" checked>
+    <input class="state-radio" type="radio" name="preview-state" id="st-empty">
+    <input class="state-radio" type="radio" name="preview-state" id="st-error">
+    <input class="state-radio" type="radio" name="preview-state" id="st-long">
+
+    <header class="studio-topbar">
+      <div class="studio-crumb">
+        <a class="studio-back" href="./index.html">← Все 10 вариантов</a>
+        <div class="studio-nav-pills">
+          <a href="./01-tactile-thumb-dock.html">01</a>
+          <a href="./02-neo-swiss-editorial.html">02</a>
+          <a href="./03-dark-campus-obsidian.html">03</a>
+          <a href="./04-auto-parse-minimal.html">04</a>
+          <a href="./05-brutalist-utility-grid.html">05</a>
+          <a href="./06-split-campus-ribbon.html">06</a>
+          <a href="./07-bottom-sheet-stepped.html">07</a>
+          <a class="is-current" href="./08-cardless-atelier-line.html">08</a>
+          <a href="./09-keyboard-ready-compact.html">09</a>
+          <a href="./10-architectural-monolith.html">10</a>
+        </div>
+      </div>
+      <div class="state-switcher">
+        <span class="state-switcher-label">Состояние:</span>
+        <label class="state-pill" for="st-normal">Обычный</label>
+        <label class="state-pill" for="st-empty">Пусто</label>
+        <label class="state-pill" for="st-error">Ошибка ЭИОС</label>
+        <label class="state-pill" for="st-long">Длинное имя</label>
+      </div>
+    </header>
+
+    <main class="studio-layout">
+      <div class="phone-bezel">
+        <div class="phone-screen">
+          <div class="ios-statusbar">
+            <span>09:41</span>
+            <div class="dynamic-island"></div>
+            <div class="ios-status-icons"><span>5G</span><span>100%</span></div>
+          </div>
+
+          <div class="atelier-wrap">
+            <div class="atelier-top">
+              <div class="atelier-logo">
+                <svg width="32" height="32" viewBox="0 0 128 128" role="img" aria-label="Клевер" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="128" height="128" rx="29" fill="#D7F4F2"/>
+                  <path d="M64 74c3 11 2 20-5 29" fill="none" stroke="#1E1E1E" stroke-width="7" stroke-linecap="round"/>
+                  <path fill="#008A87" d="M64 61c-5-3-17-12-18-22-1-10 10-16 18-8 8-8 19-2 18 8-1 10-13 19-18 22Z"/>
+                  <path fill="#1E1E1E" d="M59 69c-5-7-16-18-26-15-10 2-12 14-4 20-1 10 10 16 18 11 6-4 10-11 12-16Z"/>
+                  <path fill="#008A87" d="M69 69c5-7 16-18 26-15 10 2 12 14 4 20 1 10-10 16-18 11-6-4-10-11-12-16Z"/>
+                </svg>
+                <span class="atelier-brand">Клевер</span>
+              </div>
+              <span class="atelier-code">ЭИОС / PWA</span>
+            </div>
+
+            <div class="atelier-hero">
+              <h1>Доступ к учёбе</h1>
+              <p>Чистый журнал расписания и пропуск по штрихкоду.</p>
+            </div>
+
+            <div class="line-row line-row-inline">
+              <span class="line-label">Учебное место</span>
+              <input class="org-radio" type="radio" name="org-08" id="org8-vuz" checked>
+              <input class="org-radio" type="radio" name="org-08" id="org8-col">
+              <div class="inline-pills">
+                <label class="inline-pill" for="org8-vuz">Вуз</label>
+                <label class="inline-pill" for="org8-col">Колледж</label>
+              </div>
+            </div>
+
+            <div class="line-row">
+              <label class="line-label" for="login-08">Логин Инобортех</label>
+              <input id="login-08" class="line-input only-normal" type="text" value="v.orlov@inueco.ru">
+              <input class="line-input only-empty" type="text" value="" placeholder="Введите логин...">
+              <input class="line-input only-error" type="text" value="v.orlov@inueco.ru">
+              <input class="line-input only-long" type="text" value="konstantinopolskiy.vsevolod@inueco.ru">
+            </div>
+
+            <div class="line-row">
+              <label class="line-label" for="pass-08">Пароль</label>
+              <input id="pass-08" class="line-input only-normal" type="password" value="••••••••••">
+              <input class="line-input only-empty" type="password" value="" placeholder="••••••••">
+              <input class="line-input only-error" type="password" value="•••••">
+              <input class="line-input only-long" type="password" value="••••••••••••">
+            </div>
+
+            <div class="atelier-long only-long">
+              Южно-Уральский технологический университет · Очное отделение · Константинопольский-Рождественский В.А.
+            </div>
+
+            <div class="atelier-error only-error">
+              Учётная запись не найдена. Проверьте логин или смените «Вуз / Колледж» в первой строке.
+            </div>
+
+            <div class="atelier-bottom">
+              <a class="atelier-hint-link" href="#forgot">
+                <span>Что такое логин Инобортех?</span>
+                <strong>Справка →</strong>
+              </a>
+              <button type="button" class="atelier-cta">
+                <span class="only-normal">Войти через Инобортех</span>
+                <span class="only-empty">Укажите данные входа</span>
+                <span class="only-error">Повторить вход</span>
+                <span class="only-long">Войти через Инобортех</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="ios-home-bar-wrap">
+            <div class="ios-home-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="spec-panel">
+        <div>
+          <span class="spec-kicker">Вариант 08 / 10 · Экран входа</span>
+          <h2 class="spec-title">Dense Editorial Utility</h2>
+          <p class="spec-lead">Абсолютный отказ от карточек и рамок («anti-cardocalypse»): только чистый фон #F6F6F6, горизонтальные линии 1px и табличная точность строк.</p>
+        </div>
+
+        <div class="spec-grid">
+          <div class="spec-block">
+            <div class="spec-block-label">Палитра (3 роли)</div>
+            <div class="swatches">
+              <div class="swatch-row"><span class="swatch-dot" style="background:#F6F6F6"></span>#F6F6F6 Камень</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#1E1E1E"></span>#1E1E1E / #CFD7D6</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#008A87"></span>#008A87 Глубокий тил</div>
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Типографика</div>
+            <div class="spec-block-val">
+              Display: Unbounded 500<br>
+              Body: IBM Plex Sans<br>
+              Labels: IBM Plex Mono
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Скругления</div>
+            <div class="spec-block-val">
+              Строки формы: 0px<br>
+              Пилсы Вуз/Колледж: 6px<br>
+              Кнопка низа: 12px
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Расположение кнопок</div>
+            <div class="spec-block-val">
+              Выбор «Вуз / Колледж» встроен прямо в строку таблицы справа; главная кнопка отделена линией внизу.
+            </div>
+          </div>
+        </div>
+
+        <div class="spec-notes">
+          <strong>Логотип «Клевер» (ЮУТУ-палитра):</strong> Мятный фон <code>#D7F4F2</code> + тёмный лист и стебель <code>#1E1E1E</code> + глубокий тил <code>#008A87</code>. Лёгкий журнальный вариант без тяжёлой плашки.
+        </div>
+
+        <div class="spec-footer-nav">
+          <a class="spec-btn-link" href="./07-bottom-sheet-stepped.html">← Вариант 07</a>
+          <a class="spec-btn-link is-primary" href="./09-keyboard-ready-compact.html">Вариант 09 →</a>
+        </div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

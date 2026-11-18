@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>03 · Dark Editorial Utility — Экран входа ЮУТУ / УРК</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./studio.css">
+  <style>
+    /* Variant 03 Tokens: Dark Editorial Utility (No Neon) */
+    .phone-screen {
+      --canvas: #141616;
+      --surface: #1E1E1E;
+      --border: #2E3434;
+      --ink: #F4F6F6;
+      --muted: #98A3A2;
+      --accent: #009F9B;
+      --accent-soft: #103332;
+      --error: #E54848;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: "Golos Text", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .dark-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 22px 14px;
+    }
+
+    /* Header echoing suut.ural-campus.ru dark bar */
+    .dark-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dark-logo-lockup {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dark-app-name {
+      font-family: "Unbounded", sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #FFFFFF;
+      letter-spacing: -0.02em;
+    }
+
+    .dark-app-tag {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      color: #80CFCD;
+      margin-top: 2px;
+    }
+
+    .dark-ver {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .dark-heading {
+      margin-top: 24px;
+    }
+
+    .dark-heading h1 {
+      font-family: "Unbounded", sans-serif;
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .dark-heading p {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.48;
+      color: var(--muted);
+    }
+
+    /* Top horizontal chips below header */
+    .org-radio {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .dark-chips {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .dark-chip {
+      flex: 1;
+      min-height: 46px;
+      padding: 10px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+
+    .chip-badge {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #282D2D;
+      color: var(--muted);
+    }
+
+    #org3-vuz:checked ~ .dark-chips label[for="org3-vuz"],
+    #org3-col:checked ~ .dark-chips label[for="org3-col"] {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: #FFFFFF;
+    }
+
+    #org3-vuz:checked ~ .dark-chips label[for="org3-vuz"] .chip-badge,
+    #org3-col:checked ~ .dark-chips label[for="org3-col"] .chip-badge {
+      background: var(--accent);
+      color: #FFFFFF;
+    }
+
+    #st-empty:checked ~ .studio-layout .dark-chip {
+      background: var(--surface) !important;
+      border-color: var(--border) !important;
+      color: var(--muted) !important;
+    }
+    #st-empty:checked ~ .studio-layout .chip-badge {
+      background: #282D2D !important;
+      color: var(--muted) !important;
+    }
+
+    .dark-form {
+      margin-top: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .dark-field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #C7D0CF;
+      margin-bottom: 7px;
+    }
+
+    .dark-input {
+      width: 100%;
+      min-height: 50px;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 15px;
+      color: #FFFFFF;
+    }
+
+    .dark-input::placeholder {
+      color: #677271;
+    }
+
+    .dark-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .dark-error {
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: #2A1616;
+      border: 1px solid #6E2525;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.42;
+      color: #F8B4B4;
+    }
+
+    #st-error:checked ~ .studio-layout .dark-input {
+      border-color: var(--error);
+    }
+
+    .dark-long {
+      margin-top: 14px;
+      padding: 11px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #80CFCD;
+    }
+
+    .dark-footer {
+      margin-top: auto;
+      padding-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .dark-cta {
+      width: 100%;
+      min-height: 54px;
+      border: none;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #FFFFFF;
+      font-family: "Unbounded", sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .dark-cta:hover {
+      background: #008A87;
+    }
+
+    #st-empty:checked ~ .studio-layout .dark-cta {
+      background: #272D2D;
+      color: #7D8786;
+    }
+
+    .dark-secondary-btn {
+      width: 100%;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: #C7D0CF;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .dark-secondary-btn:hover {
+      border-color: #80CFCD;
+      color: #FFFFFF;
+    }
+  </style>
+</head>
+<body>
+  <div class="studio-stage">
+    <input class="state-radio" type="radio" name="preview-state" id="st-normal" checked>
+    <input class="state-radio" type="radio" name="preview-state" id="st-empty">
+    <input class="state-radio" type="radio" name="preview-state" id="st-error">
+    <input class="state-radio" type="radio" name="preview-state" id="st-long">
+
+    <header class="studio-topbar">
+      <div class="studio-crumb">
+        <a class="studio-back" href="./index.html">← Все 10 вариантов</a>
+        <div class="studio-nav-pills">
+          <a href="./01-tactile-thumb-dock.html">01</a>
+          <a href="./02-neo-swiss-editorial.html">02</a>
+          <a class="is-current" href="./03-dark-campus-obsidian.html">03</a>
+          <a href="./04-auto-parse-minimal.html">04</a>
+          <a href="./05-brutalist-utility-grid.html">05</a>
+          <a href="./06-split-campus-ribbon.html">06</a>
+          <a href="./07-bottom-sheet-stepped.html">07</a>
+          <a href="./08-cardless-atelier-line.html">08</a>
+          <a href="./09-keyboard-ready-compact.html">09</a>
+          <a href="./10-architectural-monolith.html">10</a>
+        </div>
+      </div>
+      <div class="state-switcher">
+        <span class="state-switcher-label">Состояние:</span>
+        <label class="state-pill" for="st-normal">Обычный</label>
+        <label class="state-pill" for="st-empty">Пусто</label>
+        <label class="state-pill" for="st-error">Ошибка ЭИОС</label>
+        <label class="state-pill" for="st-long">Длинное имя</label>
+      </div>
+    </header>
+
+    <main class="studio-layout">
+      <div class="phone-bezel">
+        <div class="phone-screen">
+          <div class="ios-statusbar">
+            <span>09:41</span>
+            <div class="dynamic-island"></div>
+            <div class="ios-status-icons"><span>5G</span><span>88%</span></div>
+          </div>
+
+          <div class="dark-wrap">
+            <div class="dark-header">
+              <div class="dark-logo-lockup">
+                <svg width="42" height="42" viewBox="0 0 128 128" role="img" aria-label="Клевер" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="128" height="128" rx="29" fill="#009F9B"/>
+                  <path d="M64 74c3 11 2 20-5 29" fill="none" stroke="#D7F4F2" stroke-width="7" stroke-linecap="round"/>
+                  <path fill="#FFFFFF" d="M64 61c-5-3-17-12-18-22-1-10 10-16 18-8 8-8 19-2 18 8-1 10-13 19-18 22Z"/>
+                  <path fill="#D7F4F2" d="M59 69c-5-7-16-18-26-15-10 2-12 14-4 20-1 10 10 16 18 11 6-4 10-11 12-16Z"/>
+                  <path fill="#FFFFFF" d="M69 69c5-7 16-18 26-15 10 2 12 14 4 20 1 10-10 16-18 11-6-4-10-11-12-16Z"/>
+                </svg>
+                <div>
+                  <div class="dark-app-name">Клевер</div>
+                  <div class="dark-app-tag">Быстрый клиент ЭИОС</div>
+                </div>
+              </div>
+              <span class="dark-ver">PWA</span>
+            </div>
+
+            <div class="dark-heading">
+              <h1>Авторизация</h1>
+              <p>Введите логин и пароль личного кабинета Инобортех.</p>
+            </div>
+
+            <input class="org-radio" type="radio" name="org-03" id="org3-vuz" checked>
+            <input class="org-radio" type="radio" name="org-03" id="org3-col">
+
+            <div class="dark-chips">
+              <label class="dark-chip" for="org3-vuz">
+                <span>ЮУТУ</span>
+                <span class="chip-badge">ВУЗ</span>
+              </label>
+              <label class="dark-chip" for="org3-col">
+                <span>УРК</span>
+                <span class="chip-badge">КОЛЛЕДЖ</span>
+              </label>
+            </div>
+
+            <div class="dark-form">
+              <div class="dark-field">
+                <label for="login-03">Логин ЭИОС</label>
+                <input id="login-03" class="dark-input only-normal" type="text" value="m.volkova@inueco.ru">
+                <input class="dark-input only-empty" type="text" value="" placeholder="ivanov.i@inueco.ru">
+                <input class="dark-input only-error" type="text" value="m.volkova@inueco.ru">
+                <input class="dark-input only-long" type="text" value="alexandrova-petrova.ekaterina@inueco.ru">
+              </div>
+
+              <div class="dark-field">
+                <label for="pass-03">Пароль</label>
+                <input id="pass-03" class="dark-input only-normal" type="password" value="••••••••••">
+                <input class="dark-input only-empty" type="password" value="" placeholder="Пароль от Инобортех">
+                <input class="dark-input only-error" type="password" value="•••••">
+                <input class="dark-input only-long" type="password" value="••••••••••••">
+              </div>
+            </div>
+
+            <div class="dark-error only-error">
+              Не удалось войти: проверьте раскладку или переключите «ЮУТУ / УРК» выше.
+            </div>
+
+            <div class="dark-long only-long">
+              Южно-Уральский технологический университет · Филиал г. Магнитогорск (ЦДО) · Александрова-Петрова Е.В.
+            </div>
+
+            <div class="dark-footer">
+              <button type="button" class="dark-cta">
+                <span class="only-normal">Открыть расписание</span>
+                <span class="only-empty">Введите логин и пароль</span>
+                <span class="only-error">Повторить попытку</span>
+                <span class="only-long">Открыть расписание</span>
+              </button>
+              <a class="dark-secondary-btn" href="#reset">Не получается войти / Сброс пароля</a>
+            </div>
+          </div>
+
+          <div class="ios-home-bar-wrap">
+            <div class="ios-home-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="spec-panel">
+        <div>
+          <span class="spec-kicker">Вариант 03 / 10 · Экран входа</span>
+          <h2 class="spec-title">Dark Editorial Utility</h2>
+          <p class="spec-lead">Тёмная тема оформления на основе угольного хедера ЮУТУ (#1E1E1E) без неонового свечения. Сразу показывает, как приложение будет смотреться в тёмном режиме из настроек.</p>
+        </div>
+
+        <div class="spec-grid">
+          <div class="spec-block">
+            <div class="spec-block-label">Палитра (3 роли)</div>
+            <div class="swatches">
+              <div class="swatch-row"><span class="swatch-dot" style="background:#141616"></span>#141616 Canvas</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#1E1E1E"></span>#1E1E1E / #2E3434</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#009F9B"></span>#009F9B Тил ЮУТУ</div>
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Типографика</div>
+            <div class="spec-block-val">
+              Display: Unbounded 700<br>
+              Body: Golos Text<br>
+              Mono: IBM Plex Mono
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Скругления</div>
+            <div class="spec-block-val">
+              Поля ввода: 8px<br>
+              Чипсы ВУЗ/УРК: 12px<br>
+              Нижние кнопки: 999px pill
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Расположение кнопок</div>
+            <div class="spec-block-val">
+              Чипсы выбора под заголовком, а внизу 2 капсульные кнопки: основная 54px и обводная «Сброс пароля» 44px.
+            </div>
+          </div>
+        </div>
+
+        <div class="spec-notes">
+          <strong>Логотип «Клевер» (ЮУТУ-палитра):</strong> Яркий тил <code>#009F9B</code> в качестве подложки иконки + контрастные белые (<code>#FFFFFF</code>) и мятные (<code>#D7F4F2</code>) лепестки — чётко выделяется на тёмном фоне <code>#141616</code>.
+        </div>
+
+        <div class="spec-footer-nav">
+          <a class="spec-btn-link" href="./02-neo-swiss-editorial.html">← Вариант 02</a>
+          <a class="spec-btn-link is-primary" href="./04-auto-parse-minimal.html">Вариант 04 →</a>
+        </div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Папоротник</title>
+  <rect width="128" height="128" rx="29" fill="#572B22"/>
+  <path d="M30 104C58 77 77 53 95 26" fill="none" stroke="#FCB36D" stroke-width="6.5" stroke-linecap="round"/>
+  <g fill="#FFD9AE">
+    <path d="M44 90c-13-3-19-13-19-27 13 3 21 12 19 27Z"/>
+    <path d="M55 79c-14-6-18-17-15-32 13 6 19 16 15 32Z"/>
+    <path d="M66 66c-11-8-12-20-7-33 11 8 13 20 7 33Z"/>
+    <path d="M78 52c-8-8-7-18 0-27 7 8 7 18 0 27Z"/>
+    <path d="M43 91c10-11 25-11 38-7-8 11-23 14-38 7Z"/>
+    <path d="M54 79c10-13 25-15 39-12-9 12-25 17-39 12Z"/>
+    <path d="M66 66c8-13 22-18 35-16-7 12-20 17-35 16Z"/>
+    <path d="M78 52c5-11 14-17 25-17-4 10-14 17-25 17Z"/>
+  </g>
+</svg>

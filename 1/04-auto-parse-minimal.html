@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>04 · Auto-Detect Minimal — Экран входа (только логин + пароль + лого)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Onest:wght@400;500;600;700&family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./studio.css">
+  <style>
+    /* Variant 04 Tokens: Auto-Detect Minimal (No forced org step) */
+    .phone-screen {
+      --canvas: #F6F6F6;
+      --surface: #FFFFFF;
+      --border: #D8DFDE;
+      --ink: #1E1E1E;
+      --muted: #65706F;
+      --accent: #008A87;
+      --accent-soft: #DCEFED;
+      --error: #D12B2B;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: "Onest", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .auto-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 16px 24px 16px;
+    }
+
+    /* Clean top brand band with real ЮУТУ mark */
+    .top-brand-card {
+      background: #1E1E1E;
+      color: #FFFFFF;
+      border-radius: 14px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .top-brand-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .top-brand-title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .top-brand-sub {
+      font-size: 12px;
+      color: #9DD9D7;
+      margin-top: 2px;
+    }
+
+    .auto-body {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .auto-title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+    .auto-desc {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.48;
+      color: var(--muted);
+    }
+
+    .auto-form {
+      margin-top: 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .auto-input {
+      width: 100%;
+      min-height: 52px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--ink);
+    }
+
+    .auto-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* Optional CSS-only manual override drawer */
+    .manual-toggle-chk {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .manual-trigger {
+      margin-top: 14px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .manual-drawer {
+      display: none;
+      margin-top: 6px;
+      padding: 10px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      gap: 8px;
+    }
+
+    .manual-toggle-chk:checked ~ .manual-drawer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .org-radio {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .manual-opt {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    #org4-vuz:checked ~ .manual-drawer label[for="org4-vuz"],
+    #org4-col:checked ~ .manual-drawer label[for="org4-col"] {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .auto-error {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #FFF1F1;
+      border: 1px solid #F2BABA;
+      color: #8E1A1A;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    #st-error:checked ~ .studio-layout .auto-input {
+      border-color: var(--error);
+    }
+
+    .auto-long-pill {
+      margin-top: 12px;
+      padding: 10px 12px;
+      background: var(--accent-soft);
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.4;
+      color: #104543;
+    }
+
+    .auto-bottom {
+      margin-top: auto;
+      padding-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .auto-cta {
+      width: 100%;
+      min-height: 54px;
+      border: none;
+      border-radius: 14px;
+      background: var(--accent);
+      color: #FFFFFF;
+      font-family: "Unbounded", sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .auto-cta:hover {
+      background: #007572;
+    }
+
+    #st-empty:checked ~ .studio-layout .auto-cta {
+      background: #CBD3D2;
+      color: #6B7574;
+    }
+
+    .auto-help-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 44px;
+      font-size: 13px;
+    }
+
+    .auto-help-row a {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 10px 0;
+    }
+
+    .auto-help-row a strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="studio-stage">
+    <input class="state-radio" type="radio" name="preview-state" id="st-normal" checked>
+    <input class="state-radio" type="radio" name="preview-state" id="st-empty">
+    <input class="state-radio" type="radio" name="preview-state" id="st-error">
+    <input class="state-radio" type="radio" name="preview-state" id="st-long">
+
+    <header class="studio-topbar">
+      <div class="studio-crumb">
+        <a class="studio-back" href="./index.html">← Все 10 вариантов</a>
+        <div class="studio-nav-pills">
+          <a href="./01-tactile-thumb-dock.html">01</a>
+          <a href="./02-neo-swiss-editorial.html">02</a>
+          <a href="./03-dark-campus-obsidian.html">03</a>
+          <a class="is-current" href="./04-auto-parse-minimal.html">04</a>
+          <a href="./05-brutalist-utility-grid.html">05</a>
+          <a href="./06-split-campus-ribbon.html">06</a>
+          <a href="./07-bottom-sheet-stepped.html">07</a>
+          <a href="./08-cardless-atelier-line.html">08</a>
+          <a href="./09-keyboard-ready-compact.html">09</a>
+          <a href="./10-architectural-monolith.html">10</a>
+        </div>
+      </div>
+      <div class="state-switcher">
+        <span class="state-switcher-label">Состояние:</span>
+        <label class="state-pill" for="st-normal">Обычный</label>
+        <label class="state-pill" for="st-empty">Пусто</label>
+        <label class="state-pill" for="st-error">Ошибка ЭИОС</label>
+        <label class="state-pill" for="st-long">Длинное имя</label>
+      </div>
+    </header>
+
+    <main class="studio-layout">
+      <div class="phone-bezel">
+        <div class="phone-screen">
+          <div class="ios-statusbar">
+            <span>09:41</span>
+            <div class="dynamic-island"></div>
+            <div class="ios-status-icons"><span>5G</span><span>100%</span></div>
+          </div>
+
+          <div class="auto-wrap">
+            <div class="top-brand-card">
+              <div class="top-brand-left">
+                <svg width="44" height="44" viewBox="0 0 128 128" role="img" aria-label="Клевер" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="128" height="128" rx="29" fill="#008A87"/>
+                  <path d="M64 74c3 11 2 20-5 29" fill="none" stroke="#80CFCD" stroke-width="7" stroke-linecap="round"/>
+                  <path fill="#D7F4F2" d="M64 61c-5-3-17-12-18-22-1-10 10-16 18-8 8-8 19-2 18 8-1 10-13 19-18 22Z"/>
+                  <path fill="#80CFCD" d="M59 69c-5-7-16-18-26-15-10 2-12 14-4 20-1 10 10 16 18 11 6-4 10-11 12-16Z"/>
+                  <path fill="#D7F4F2" d="M69 69c5-7 16-18 26-15 10 2 12 14 4 20 1 10-10 16-18 11-6-4-10-11-12-16Z"/>
+                </svg>
+                <div>
+                  <div class="top-brand-title">Клевер</div>
+                  <div class="top-brand-sub">Расписание, QR и уведомления</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="auto-body">
+              <h1 class="auto-title">Один вход<br>для учёбы</h1>
+              <p class="auto-desc">Вуз или колледж определится по логину через Инобортех API автоматически.</p>
+
+              <div class="auto-form">
+                <input class="auto-input only-normal" type="text" value="k.smirnov@inueco.ru" aria-label="Логин">
+                <input class="auto-input only-empty" type="text" value="" placeholder="Логин Инобортех (например, stud-1024)">
+                <input class="auto-input only-error" type="text" value="k.smirnov@inueco.ru">
+                <input class="auto-input only-long" type="text" value="christopher-alexandr.belozertsev@inueco.ru">
+
+                <input class="auto-input only-normal" type="password" value="••••••••••" aria-label="Пароль">
+                <input class="auto-input only-empty" type="password" value="" placeholder="Пароль">
+                <input class="auto-input only-error" type="password" value="•••••">
+                <input class="auto-input only-long" type="password" value="••••••••••••">
+              </div>
+
+              <input class="manual-toggle-chk" type="checkbox" id="manual-org-04">
+              <label class="manual-trigger" for="manual-org-04">
+                <span>Указать вуз или колледж вручную ▾</span>
+              </label>
+
+              <input class="org-radio" type="radio" name="org-04" id="org4-vuz" checked>
+              <input class="org-radio" type="radio" name="org-04" id="org4-col">
+              <div class="manual-drawer">
+                <label class="manual-opt" for="org4-vuz">Вуз (ЮУТУ)</label>
+                <label class="manual-opt" for="org4-col">Колледж (УРК)</label>
+              </div>
+
+              <div class="auto-error only-error">
+                Не удалось распознать профиль в Инобортех. Попробуйте выбрать вуз/колледж вручную выше.
+              </div>
+
+              <div class="auto-long-pill only-long">
+                Определено по API: Южно-Уральский технологический университет · Белозерцев-Александров К.Д.
+              </div>
+
+              <div class="auto-bottom">
+                <button type="button" class="auto-cta">
+                  <span class="only-normal">Войти</span>
+                  <span class="only-empty">Введите логин</span>
+                  <span class="only-error">Проверить и войти</span>
+                  <span class="only-long">Войти</span>
+                </button>
+                <div class="auto-help-row">
+                  <a href="#forgot">Забыли пароль?</a>
+                  <a href="#tg">Чат поддержки <strong>@suut_help</strong></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ios-home-bar-wrap">
+            <div class="ios-home-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="spec-panel">
+        <div>
+          <span class="spec-kicker">Вариант 04 / 10 · Экран входа</span>
+          <h2 class="spec-title">Auto-Detect Minimal</h2>
+          <p class="spec-lead">Прямая реализация второго сценария из task: «если с парсингом — только логин + пароль и лого вверху». Выбор ВУЗ/Колледж скрыт в компактную ссылку-аккордеон.</p>
+        </div>
+
+        <div class="spec-grid">
+          <div class="spec-block">
+            <div class="spec-block-label">Палитра (3 роли)</div>
+            <div class="swatches">
+              <div class="swatch-row"><span class="swatch-dot" style="background:#F6F6F6"></span>#F6F6F6 Canvas</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#1E1E1E"></span>#1E1E1E Лого-блок</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#008A87"></span>#008A87 Глубокий тил</div>
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Типографика</div>
+            <div class="spec-block-val">
+              Display: Unbounded 700<br>
+              Body: Onest 400/600<br>
+              Приложение: «Клевер»
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Скругления</div>
+            <div class="spec-block-val">
+              Шапка-лого: 14px<br>
+              Поля: 12px<br>
+              Кнопка входа: 14px
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Расположение кнопок</div>
+            <div class="spec-block-val">
+              Минимум шума: под полями только текстовая кнопка раскрытия «Указать вручную ▾», вся нижняя зона отдана кнопке «Войти».
+            </div>
+          </div>
+        </div>
+
+        <div class="spec-notes">
+          <strong>Логотип «Клевер» (ЮУТУ-палитра):</strong> Фон иконки <code>#008A87</code>, лепестки <code>#D7F4F2</code> и <code>#80CFCD</code>. Нажмите «Указать вуз или колледж вручную ▾» — на чистом CSS раскроется ручной выбор.
+        </div>
+
+        <div class="spec-footer-nav">
+          <a class="spec-btn-link" href="./03-dark-campus-obsidian.html">← Вариант 03</a>
+          <a class="spec-btn-link is-primary" href="./05-brutalist-utility-grid.html">Вариант 05 →</a>
+        </div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

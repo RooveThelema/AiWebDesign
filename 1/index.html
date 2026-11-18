@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Клевер · Папка 1 — Экран 1 (Вход), 10 вариантов</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Roboto:wght@400;500;700&family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #ECEFEF;
+      color: #1E1E1E;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 32px 24px 56px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+    .head {
+      background: #1E1E1E;
+      color: #FFFFFF;
+      border-radius: 16px;
+      padding: 28px 32px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .head-brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .head-title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+    .head-sub {
+      font-size: 14px;
+      color: #B4C2C1;
+      margin-top: 6px;
+      max-width: 600px;
+    }
+    .palette-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .swatch {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: #2A2E2E;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      color: #E7EDED;
+    }
+    .swatch i {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      display: inline-block;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .review-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      margin: -12px 0 16px;
+    }
+    .review-nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      color: #006C69;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: #FFFFFF;
+      border: 1px solid #D5DADA;
+      border-radius: 14px;
+      padding: 22px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+    .card:hover {
+      border-color: #009F9B;
+      transform: translateY(-2px);
+    }
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .card-num {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      font-weight: 500;
+      color: #008A87;
+      background: #D7F4F2;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    .card-mode {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      color: #67706F;
+    }
+    .card h2 {
+      font-family: "Unbounded", sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .card p {
+      font-size: 14px;
+      line-height: 1.48;
+      color: #505857;
+    }
+    .card-meta {
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid #EAECEC;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      color: #008A87;
+    }
+    .card.is-dark-card {
+      background: #1E1E1E;
+      border-color: #2E3434;
+      color: #F4F6F6;
+    }
+    .card.is-dark-card p { color: #A6B0AF; }
+    .card.is-dark-card .card-meta { border-top-color: #2E3434; color: #80CFCD; }
+    .card.is-dark-card .card-num { background: #103332; color: #80CFCD; }
+    .card.is-dark-card .card-mode { color: #8C9695; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="head">
+      <div class="head-brand">
+        <svg width="52" height="52" viewBox="0 0 128 128" role="img" aria-label="Клевер" xmlns="http://www.w3.org/2000/svg">
+          <rect width="128" height="128" rx="29" fill="#009F9B"/>
+          <path d="M64 74c3 11 2 20-5 29" fill="none" stroke="#D7F4F2" stroke-width="7" stroke-linecap="round"/>
+          <path fill="#FFFFFF" d="M64 61c-5-3-17-12-18-22-1-10 10-16 18-8 8-8 19-2 18 8-1 10-13 19-18 22Z"/>
+          <path fill="#D7F4F2" d="M59 69c-5-7-16-18-26-15-10 2-12 14-4 20-1 10 10 16 18 11 6-4 10-11 12-16Z"/>
+          <path fill="#FFFFFF" d="M69 69c5-7 16-18 26-15 10 2 12 14 4 20 1 10-10 16-18 11-6-4-10-11-12-16Z"/>
+        </svg>
+        <div>
+          <h1 class="head-title">Клевер · Папка 1 (Экран входа)</h1>
+          <p class="head-sub">10 вариантов на чистом HTML + CSS. Оригинальная SVG Клевера перекрашена в палитру ЮУТУ в 10 цветовых сочетаниях. В каждом макете работает переключатель ВУЗ/Колледж и проверка состояний.</p>
+        </div>
+      </div>
+      <div class="palette-bar">
+        <span class="swatch"><i style="background:#009F9B"></i>#009F9B ЮУТУ</span>
+        <span class="swatch"><i style="background:#008A87"></i>#008A87 Deep</span>
+        <span class="swatch"><i style="background:#80CFCD"></i>#80CFCD Mid</span>
+        <span class="swatch"><i style="background:#D7F4F2"></i>#D7F4F2 Mint</span>
+        <span class="swatch"><i style="background:#1E1E1E"></i>#1E1E1E Dark</span>
+        <span class="swatch"><i style="background:#DCBB89"></i>#DCBB89 Beige</span>
+      </div>
+    </header>
+
+    <nav class="review-nav" aria-label="Просмотр выбранного макета и следующего экрана">
+      <a href="./10-window.html" target="_blank" rel="noopener">Вход № 10 в отдельном окне ↗</a>
+      <a href="../2/index.html">Главный экран →</a>
+    </nav>
+
+    <section class="grid">
+      <a class="card" href="./01-tactile-thumb-dock.html">
+        <div class="card-top"><span class="card-num">01</span><span class="card-mode">Thumb-Zone Dock</span></div>
+        <h2>Warm Tactile Campus</h2>
+        <p>Сегмент «Вуз ЮУТУ / Колледж УРК» и главная кнопка опущены в нижний док под большой палец. Мягкий светлый фон #F6F6F6.</p>
+        <div class="card-meta"><span>SVG: #008A87 + #FFF / #80CFCD</span><span>Открыть →</span></div>
+      </a>
+
+      <a class="card" href="./02-neo-swiss-editorial.html">
+        <div class="card-top"><span class="card-num">02</span><span class="card-mode">Сплит 34/66 внизу</span></div>
+        <h2>High-Contrast Neo-Swiss</h2>
+        <p>Швейцарская сетка на линиях 1.5px без теней. Две квадратные плитки выбора 01/02 и раздельный нижний бар «Помощь | Войти».</p>
+        <div class="card-meta"><span>SVG: #1E1E1E + #D7F4F2 / #009F9B</span><span>Открыть →</span></div>
+      </a>
+
+      <a class="card is-dark-card" href="./03-dark-campus-obsidian.html">
+        <div class="card-top"><span class="card-num">03</span><span class="card-mode">Тёмная тема · Пилюли</span></div>
+        <h2>Dark Editorial Utility</h2>
+        <p>Тёмное оформление без неона на базе угольного #1E1E1E. Чипсы выбора под заголовком и две капсулы внизу.</p>
+        <div class="card-meta"><span>SVG: #009F9B + #FFF / #D7F4F2</span><span>Открыть →</span></div>
+      </a>
+
+      <a class="card" href="./04-auto-parse-minimal.html">
+        <div class="card-top"><span class="card-num">04</span><span class="card-mode">С парсингом Инобортех</span></div>
+        <h2>Auto-Detect Minimal</h2>
+        <p>Сценарий без явного выбора вуза: лого сверху и только логин + пароль. Ручной выбор скрыт в CSS-аккордеоне под полями.</p>
+        <div class="card-meta"><span>SVG: #008A87 + #D7F4F2 / #80CFCD</span><span>Открыть →</span></div>
+      </a>
+
+      <a class="card" href="./05-brutalist-utility-grid.html">
+        <div class="card-top"><span class="card-num">05</span><span class="card-mode">Угловая кнопка-круг</span></div>
+        <h2>Brutalist Academic Utility</h2>
+        <p>Жёсткие 0px блоки с 2px обводкой и контрастная круглая кнопка «→» 64×64px в правом нижнем углу под большой палец.</p>
+        <div class="card-meta"><span>SVG: #000 + #009F9B / #DCBB89</span><span>Открыть →</span></div>
+      </a>
+
+      <a class="card" href="./06-split-campus-ribbon.html">
+        <div class="card-top"><span class="card-num">06</span><span class="card-mode">Смена цвета ЮУТУ/УРК</span></div>
+        <h2>Dual-Campus Split Header</h2>
+        <p>Выбор в верхней акцентной ленте меняет цвет интерфейса между #008A87 (ЮУТУ) и #0058AA (УРК).</p>
+        <div class="card-meta"><span>SVG: #FFF + #008A87 / #80CFCD</span><span>Открыть →</span></div>
+      </a>
+
+      <a class="card" href="./07-bottom-sheet-stepped.html">
+        <div class="card-top"><span class="card-num">07</span><span class="card-mode">Шторка под 1 руку</span></div>
+        <h2>Thumb-First Bottom Sheet</h2>
+        <p>Верхние 38% оставлены под воздух и логотип, все чипсы, поля и парные кнопки «Пароль? | Войти» живут в нижней шторке.</p>
+        <div class="card-meta"><span>SVG: #009F9B + #D7F4F2 / #FFF</span><span>Открыть →</span></div>
+      </a>
+
+      <a class="card" href="./08-cardless-atelier-line.html">
+        <div class="card-top"><span class="card-num">08</span><span class="card-mode">Без карточек · Линии</span></div>
+        <h2>Dense Editorial Utility</h2>
+        <p>Журнальная вёрстка без рамок и карточек: только 1px разделители, строчный выбор «Вуз / Колледж» справа и нижняя кнопка.</p>
+        <div class="card-meta"><span>SVG: #D7F4F2 + #008A87 / #1E1E1E</span><span>Открыть →</span></div>
+      </a>
+
+      <a class="card" href="./09-keyboard-ready-compact.html">
+        <div class="card-top"><span class="card-num">09</span><span class="card-mode">Над клавиатурой</span></div>
+        <h2>Keyboard-Ready Express</h2>
+        <p>Компактный вариант под открытую клавиатуру: свитч «ЮУТУ | УРК» и кнопка «Войти →» стоят в одной строке сразу под паролем.</p>
+        <div class="card-meta"><span>SVG: #1E1E1E + #FFF / #009F9B</span><span>Открыть →</span></div>
+      </a>
+
+      <a class="card" href="./10-architectural-monolith.html">
+        <div class="card-top"><span class="card-num">10</span><span class="card-mode">Монолит + пилюля</span></div>
+        <h2>Monolith Deep Teal</h2>
+        <p>Фирменный верхний блок #008A87 с логотипом Клевер, подчёркнутые вкладки и сбалансированный низ («Забыли?» слева, «Войти» справа).</p>
+        <div class="card-meta"><span>SVG: #1E1E1E + #D7F4F2 / #80CFCD</span><span>Открыть →</span></div>
+      </a>
+    </section>
+  </div>
+</body>
+</html>

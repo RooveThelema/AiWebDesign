@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>10 · Пропуск в шапке — Клевер</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;650;700&family=Unbounded:wght@600;650;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../1/studio.css">
+  <link rel="stylesheet" href="./screen.css">
+  <style>
+    .header-pass {
+      --qr-size: 104px;
+      --day-class: #c5e7cb;
+      --day-exam: #f5ccce;
+      --day-lab: #e8d5f5;
+      --key-class: #367e47;
+      --key-exam: #b54d55;
+      --key-lab: #8b58a9;
+    }
+
+    .header-pass:has(#dark-theme:checked) {
+      color-scheme: dark;
+      --canvas: #1e1e1e;
+      --surface: #282d2c;
+      --ink: #f6f6f6;
+      --muted: #bbc9c7;
+      --rule: #485351;
+      --accent: #80cfcd;
+      --tint: #254240;
+      --tint-ink: #d7f4f2;
+      --day-class: #284e34;
+      --day-exam: #63363d;
+      --day-lab: #503961;
+      --key-class: #88cf96;
+      --key-exam: #f2a4ad;
+      --key-lab: #d5a8ed;
+    }
+
+    .clover-tap {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      margin-inline: -5px 0;
+      padding: 0;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .clover-tap img {
+      transform: translateX(0);
+      transition: transform 300ms cubic-bezier(.22, 1.65, .48, 1);
+      transition-timing-function: linear(0, 1.65 28%, .62 54%, 1.14 78%, 1);
+    }
+
+    .clover-tap:active img { transform: translateX(-3px); transition: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .clover-tap img, .clover-tap:active img { transform: none; transition: none; }
+    }
+
+    .header-pass .pass p {
+      max-width: 26ch;
+      margin-top: 6px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .header-pass .pass .pass-code {
+      display: block;
+      padding: 0;
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .pass-code img { display: block; width: var(--qr-size); height: auto; border-radius: inherit; }
+
+    .pass-viewer {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100dvh;
+      max-width: none;
+      max-height: none;
+      margin: 0;
+      padding: max(12px, env(safe-area-inset-top)) 16px max(12px, env(safe-area-inset-bottom));
+      overflow: auto;
+      border: 0;
+      background: #fff;
+      color: #1e1e1e;
+      color-scheme: light;
+    }
+
+    .pass-viewer:popover-open { display: grid; grid-template-rows: auto 1fr; }
+    html:has(.pass-viewer:popover-open) { overflow: hidden; }
+
+    .pass-viewer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .pass-viewer-bar h2 { font-size: 18px; }
+    .pass-viewer-body { display: grid; place-content: center; justify-items: center; }
+    .pass-viewer-body img { display: block; width: min(84vw, 65dvh, 560px); height: auto; }
+    .pass-viewer-body p { color: #505b5a; font-size: 13px; }
+
+    .view-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+      padding: 0 12px;
+      border: 1px solid currentColor;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--accent);
+      font: 650 13px "Golos Text", system-ui, sans-serif;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .pass-viewer .view-button { color: #006c69; }
+    .header-pass :is(button, a):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .pass-viewer .view-button:focus-visible { outline-color: #006c69; }
+
+    .header-pass .section-head h1, .view-title { font-size: 23px; }
+    .header-pass .day b { font-size: 15px; }
+    .header-pass .lesson { grid-template-columns: minmax(0, 1fr) 86px; padding-block: 11px; }
+    .header-pass .lesson h3 { font-size: 16px; }
+    .header-pass .lesson-time,
+    .header-pass .lesson-detail p,
+    .header-pass .lesson-progress span { font-size: 13px; }
+    .header-pass .lesson progress { height: 5px; }
+
+    .calendar-heading, .month-picker, .settings-view, .event-kind { display: none; }
+    .header-pass:has(#tab-calendar:checked) :is(.pass, .home-heading, .week),
+    .header-pass:has(#tab-settings:checked) :is(.pass, .day-area) { display: none; }
+    .header-pass:has(#tab-calendar:checked) .calendar-heading { display: flex; }
+    .header-pass:has(#tab-calendar:checked) :is(.month-picker, .event-kind),
+    .header-pass:has(#tab-settings:checked) .settings-view { display: block; }
+
+    #day-16:checked ~ :is(.week, .month-picker) [for="day-16"],
+    #day-17:checked ~ :is(.week, .month-picker) [for="day-17"],
+    #day-18:checked ~ :is(.week, .month-picker) [for="day-18"],
+    #day-19:checked ~ :is(.week, .month-picker) [for="day-19"],
+    #day-20:checked ~ :is(.week, .month-picker) [for="day-20"],
+    #day-21:checked ~ :is(.week, .month-picker) [for="day-21"],
+    #day-22:checked ~ :is(.week, .month-picker) [for="day-22"] {
+      background: var(--date-highlight, var(--tint));
+      color: var(--ink);
+      box-shadow: inset 0 0 0 2px var(--accent);
+    }
+
+    #day-16:focus-visible ~ :is(.week, .month-picker) [for="day-16"],
+    #day-17:focus-visible ~ :is(.week, .month-picker) [for="day-17"],
+    #day-18:focus-visible ~ :is(.week, .month-picker) [for="day-18"],
+    #day-19:focus-visible ~ :is(.week, .month-picker) [for="day-19"],
+    #day-20:focus-visible ~ :is(.week, .month-picker) [for="day-20"],
+    #day-21:focus-visible ~ :is(.week, .month-picker) [for="day-21"],
+    #day-22:focus-visible ~ :is(.week, .month-picker) [for="day-22"] {
+      outline: 2px dashed var(--accent);
+      outline-offset: -4px;
+    }
+
+    .month-picker { --date-highlight: var(--surface); }
+
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .month-weekday {
+      padding-block: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .month-day {
+      position: relative;
+      isolation: isolate;
+      display: grid;
+      place-items: center;
+      min-height: 44px;
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .month-day time { position: relative; }
+    .month-day[for] { color: var(--ink); font-weight: 650; cursor: pointer; }
+    .month-day[for]:hover { outline: 1px solid var(--accent); outline-offset: -2px; }
+
+    .day-fills {
+      position: absolute;
+      z-index: -1;
+      inset: 3px;
+      display: flex;
+      overflow: hidden;
+      border-radius: 4px;
+    }
+
+    .day-fills span { flex: 1; background: var(--event-fill); }
+    .kind-class { --event-fill: var(--day-class); --event-key: var(--key-class); }
+    .kind-exam { --event-fill: var(--day-exam); --event-key: var(--key-exam); }
+    .kind-lab { --event-fill: var(--day-lab); --event-key: var(--key-lab); }
+
+    .calendar-key {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      list-style: none;
+    }
+
+    .calendar-key li { display: flex; align-items: center; gap: 5px; }
+    .calendar-key li::before {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--event-key);
+      content: "";
+    }
+
+    .calendar-range { margin-top: 8px; color: var(--muted); font-size: 12px; }
+    .header-pass .event-kind { color: var(--event-key); font-weight: 650; }
+
+    .app-bottom {
+      flex: none;
+      border-top: 1px solid var(--rule);
+      background: var(--surface);
+    }
+
+    .app-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 4px;
+      min-width: 0;
+      padding: 4px 10px 0;
+      border: 0;
+    }
+
+    .app-tab {
+      position: relative;
+      display: grid;
+      place-content: center;
+      justify-items: center;
+      gap: 2px;
+      min-height: 56px;
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    .tab-icon { display: grid; place-items: center; width: 46px; height: 26px; border-radius: 12px; }
+    .app-tab:has(input:checked) { color: var(--accent); }
+    .app-tab:has(input:checked) .tab-icon { background: var(--tint); }
+    .app-tab:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+    .settings-view { margin: 20px var(--edge); }
+    .view-title { font-family: "Unbounded", system-ui, sans-serif; letter-spacing: -.045em; }
+    .settings-list { margin: 16px 0 24px; border-top: 1px solid var(--rule); }
+
+    .settings-row {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      min-height: 52px;
+      padding: 6px 2px;
+      border: 0;
+      border-bottom: 1px solid var(--rule);
+      background: transparent;
+      color: var(--ink);
+      font: 550 14px "Golos Text", system-ui, sans-serif;
+      text-align: start;
+      cursor: pointer;
+    }
+
+    .switch-track {
+      display: flex;
+      align-items: center;
+      flex: none;
+      width: 44px;
+      height: 26px;
+      padding: 3px;
+      border: 1px solid var(--rule);
+      border-radius: 99px;
+      background: var(--surface);
+    }
+
+    .switch-track::before {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--muted);
+      content: "";
+    }
+
+    #dark-theme:checked + .switch-track { justify-content: flex-end; background: var(--tint); }
+    #dark-theme:checked + .switch-track::before { background: var(--accent); }
+    #dark-theme:focus-visible + .switch-track { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .team h2 { font-size: 17px; }
+    .team ol {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 14px;
+      margin: 8px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .team li {
+      padding: 10px 0;
+      border-top: 1px solid var(--rule);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .logout-confirm {
+      inset: 0;
+      width: min(340px, calc(100% - 32px));
+      margin: auto;
+      padding: 20px;
+      border: 1px solid var(--rule);
+      border-radius: 14px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .logout-confirm::backdrop { background: #0e1413b3; }
+    .logout-confirm h2 { font-size: 17px; }
+    .confirm-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+
+    @media (max-width: 520px) {
+      .header-pass { height: 100dvh; }
+      .header-pass .app-scroll { overflow-y: auto; }
+      .app-bottom { padding-bottom: max(4px, env(safe-area-inset-bottom)); }
+    }
+
+    @media (max-width: 360px) {
+      .month-grid { margin-inline: calc(6px - var(--edge)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="studio-stage">
+    <input class="state-radio" type="radio" name="preview-state" id="st-normal" checked>
+    <input class="state-radio" type="radio" name="preview-state" id="st-empty">
+    <input class="state-radio" type="radio" name="preview-state" id="st-error">
+    <input class="state-radio" type="radio" name="preview-state" id="st-long">
+
+    <header class="studio-topbar">
+      <div class="studio-crumb">
+        <a class="studio-back" href="./index.html">← Главный экран</a>
+        <nav class="studio-nav-pills" aria-label="Варианты главного экрана">
+          <a href="./01-monolith.html">01</a>
+          <a href="./02-checkpoint.html">02</a>
+          <a href="./03-ledger.html">03</a>
+          <a href="./04-week-first.html">04</a>
+          <a href="./05-night.html">05</a>
+          <a href="./06-current.html">06</a>
+          <a href="./07-split.html">07</a>
+          <a href="./08-ticket.html">08</a>
+          <a href="./09-timeline.html">09</a>
+          <a href="./10-header-pass.html" class="is-current" aria-current="page">10</a>
+        </nav>
+      </div>
+      <div class="state-switcher" role="group" aria-label="Состояние макета">
+        <label class="state-pill" for="st-normal">Обычный</label>
+        <label class="state-pill" for="st-empty">Нет пар</label>
+        <label class="state-pill" for="st-error">Ошибка ЭИОС</label>
+        <label class="state-pill" for="st-long">Длинные названия</label>
+      </div>
+    </header>
+
+    <main class="studio-layout">
+      <div class="phone-bezel">
+        <div class="phone-screen campus header-pass">
+          <header class="campus-header">
+            <div class="ios-statusbar" aria-hidden="true">
+              <span>09:41</span>
+              <div class="dynamic-island"></div>
+              <div class="ios-status-icons"><span>5G</span><span>100%</span></div>
+            </div>
+            <div class="identity">
+              <button class="clover-tap" type="button" aria-label="Клевер">
+                <img src="./clover.svg" width="34" height="34" alt="">
+              </button>
+              <strong>Клевер</strong>
+              <span>ЮУТУ · ИВТ-24</span>
+            </div>
+          </header>
+
+          <div class="app-scroll">
+            <section class="pass" aria-labelledby="pass-title">
+              <div class="pass-copy">
+                <h2 id="pass-title">QR-пропуск</h2>
+                <p>Нажмите на QR, чтобы показать его на весь экран.</p>
+              </div>
+              <button class="pass-code" type="button" popovertarget="pass-zoom" aria-label="Показать QR-пропуск на весь экран">
+                <img src="./demo-pass.svg" width="104" height="104" alt="">
+              </button>
+            </section>
+
+            <div class="pass-viewer" id="pass-zoom" popover role="dialog" aria-labelledby="zoom-title">
+              <header class="pass-viewer-bar">
+                <h2 id="zoom-title">QR-пропуск</h2>
+                <button class="view-button" type="button" popovertarget="pass-zoom" popovertargetaction="hide" autofocus>Закрыть</button>
+              </header>
+              <div class="pass-viewer-body">
+                <img src="./demo-pass.svg" width="560" height="560" alt="Демонстрационный QR-код">
+                <p>Образец пропуска</p>
+              </div>
+            </div>
+
+            <section class="day-area" aria-label="Учебное расписание">
+              <div class="section-head home-heading">
+                <h1>Расписание</h1>
+                <p>16–22 ноября</p>
+              </div>
+              <div class="section-head calendar-heading">
+                <h1>Календарь</h1>
+                <p>Ноябрь 2026</p>
+              </div>
+              <div class="date-picker" role="radiogroup" aria-label="Выбрать день для просмотра расписания">
+                <input class="visually-hidden" type="radio" name="day" id="day-16" aria-label="Понедельник, 16 ноября, пары">
+                <input class="visually-hidden" type="radio" name="day" id="day-17" aria-label="Вторник, 17 ноября, экзамен и пара">
+                <input class="visually-hidden" type="radio" name="day" id="day-18" aria-label="Среда, 18 ноября, пары и лабораторная" checked>
+                <input class="visually-hidden" type="radio" name="day" id="day-19" aria-label="Четверг, 19 ноября, лабораторная и практика">
+                <input class="visually-hidden" type="radio" name="day" id="day-20" aria-label="Пятница, 20 ноября, пары">
+                <input class="visually-hidden" type="radio" name="day" id="day-21" aria-label="Суббота, 21 ноября, пар нет">
+                <input class="visually-hidden" type="radio" name="day" id="day-22" aria-label="Воскресенье, 22 ноября, пар нет">
+                <div class="week">
+                  <label class="day" for="day-16"><span>Пн</span><b>16</b></label>
+                  <label class="day" for="day-17"><span>Вт</span><b>17</b></label>
+                  <label class="day" for="day-18" aria-current="date"><span>Ср</span><b>18</b></label>
+                  <label class="day" for="day-19"><span>Чт</span><b>19</b></label>
+                  <label class="day" for="day-20"><span>Пт</span><b>20</b></label>
+                  <label class="day" for="day-21"><span>Сб</span><b>21</b></label>
+                  <label class="day" for="day-22"><span>Вс</span><b>22</b></label>
+                </div>
+                <div class="month-picker">
+                  <div class="month-grid">
+                    <span class="month-weekday" aria-hidden="true">Пн</span>
+                    <span class="month-weekday" aria-hidden="true">Вт</span>
+                    <span class="month-weekday" aria-hidden="true">Ср</span>
+                    <span class="month-weekday" aria-hidden="true">Чт</span>
+                    <span class="month-weekday" aria-hidden="true">Пт</span>
+                    <span class="month-weekday" aria-hidden="true">Сб</span>
+                    <span class="month-weekday" aria-hidden="true">Вс</span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span class="month-day"><time datetime="2026-11-01">1</time></span>
+                    <span class="month-day"><time datetime="2026-11-02">2</time></span>
+                    <span class="month-day"><time datetime="2026-11-03">3</time></span>
+                    <span class="month-day"><time datetime="2026-11-04">4</time></span>
+                    <span class="month-day"><time datetime="2026-11-05">5</time></span>
+                    <span class="month-day"><time datetime="2026-11-06">6</time></span>
+                    <span class="month-day"><time datetime="2026-11-07">7</time></span>
+                    <span class="month-day"><time datetime="2026-11-08">8</time></span>
+                    <span class="month-day"><time datetime="2026-11-09">9</time></span>
+                    <span class="month-day"><time datetime="2026-11-10">10</time></span>
+                    <span class="month-day"><time datetime="2026-11-11">11</time></span>
+                    <span class="month-day"><time datetime="2026-11-12">12</time></span>
+                    <span class="month-day"><time datetime="2026-11-13">13</time></span>
+                    <span class="month-day"><time datetime="2026-11-14">14</time></span>
+                    <span class="month-day"><time datetime="2026-11-15">15</time></span>
+                    <label class="month-day" for="day-16">
+                      <span class="day-fills" aria-hidden="true"><span class="kind-class"></span></span>
+                      <time datetime="2026-11-16">16</time>
+                    </label>
+                    <label class="month-day" for="day-17">
+                      <span class="day-fills" aria-hidden="true"><span class="kind-exam"></span><span class="kind-class"></span></span>
+                      <time datetime="2026-11-17">17</time>
+                    </label>
+                    <label class="month-day" for="day-18" aria-current="date">
+                      <span class="day-fills" aria-hidden="true"><span class="kind-class"></span><span class="kind-lab"></span></span>
+                      <time datetime="2026-11-18">18</time>
+                    </label>
+                    <label class="month-day" for="day-19">
+                      <span class="day-fills" aria-hidden="true"><span class="kind-lab"></span></span>
+                      <time datetime="2026-11-19">19</time>
+                    </label>
+                    <label class="month-day" for="day-20">
+                      <span class="day-fills" aria-hidden="true"><span class="kind-class"></span></span>
+                      <time datetime="2026-11-20">20</time>
+                    </label>
+                    <label class="month-day" for="day-21">
+                      <time datetime="2026-11-21">21</time>
+                    </label>
+                    <label class="month-day" for="day-22">
+                      <time datetime="2026-11-22">22</time>
+                    </label>
+                    <span class="month-day"><time datetime="2026-11-23">23</time></span>
+                    <span class="month-day"><time datetime="2026-11-24">24</time></span>
+                    <span class="month-day"><time datetime="2026-11-25">25</time></span>
+                    <span class="month-day"><time datetime="2026-11-26">26</time></span>
+                    <span class="month-day"><time datetime="2026-11-27">27</time></span>
+                    <span class="month-day"><time datetime="2026-11-28">28</time></span>
+                    <span class="month-day"><time datetime="2026-11-29">29</time></span>
+                    <span class="month-day"><time datetime="2026-11-30">30</time></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                  </div>
+                  <ul class="calendar-key" aria-label="Типы занятий">
+                    <li class="kind-class">Пары</li>
+                    <li class="kind-exam">Экзамены</li>
+                    <li class="kind-lab">Практики и лабораторные</li>
+                  </ul>
+                  <p class="calendar-range">Доступно расписание на 16–22 ноября.</p>
+                </div>
+              </div>
+              <div class="schedule">
+                <p class="sync-note only-error">Нет связи с ЭИОС. Показано сохранённое расписание.</p>
+                <div class="regular-day">
+                  <section data-date="16" aria-label="16 ноября">
+                    <ol class="lessons">
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="09:00">09:00</time>–<time datetime="10:30">10:30</time></span>
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Теория вероятностей</h3>
+                          <p>А-204 · Смирнова Е. В.</p>
+                        </div>
+                      </li>
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="10:40">10:40</time>–<time datetime="12:10">12:10</time></span>
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Архитектура ЭВМ</h3>
+                          <p>Б-316 · Крылов Р. А.</p>
+                        </div>
+                      </li>
+                    </ol>
+                  </section>
+                  <section data-date="17" aria-label="17 ноября">
+                    <ol class="lessons">
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="10:40">10:40</time>–<time datetime="12:10">12:10</time></span>
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Английский язык</h3>
+                          <p>А-212 · Морозова А. С.</p>
+                          <p class="event-kind kind-exam">Экзамен</p>
+                        </div>
+                      </li>
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="12:50">12:50</time>–<time datetime="14:20">14:20</time></span>
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Алгоритмы</h3>
+                          <p>Б-302 · Петров А. Н.</p>
+                        </div>
+                      </li>
+                    </ol>
+                  </section>
+                  <section data-date="18" aria-label="18 ноября">
+                    <ol class="lessons">
+                      <li class="lesson is-current">
+                        <div class="lesson-time">
+                          <span><time datetime="09:00">09:00</time>–<time datetime="10:30">10:30</time></span>
+                          <strong>Идёт пара</strong>
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Базы данных</h3>
+                          <p>Б-307 · Соколова И. М.</p>
+                        </div>
+                        <div class="lesson-progress">
+                          <span>До конца 49 минут</span>
+                          <progress value="41" max="90" aria-label="Прошла 41 минута из 90"></progress>
+                        </div>
+                      </li>
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="10:40">10:40</time>–<time datetime="12:10">12:10</time></span>
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Дискретная математика</h3>
+                          <p>А-204 · Петров А. Н.</p>
+                        </div>
+                      </li>
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="12:50">12:50</time>–<time datetime="14:20">14:20</time></span>
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Компьютерные сети</h3>
+                          <p>Б-312 · Крылов Р. А.</p>
+                          <p class="event-kind kind-lab">Лабораторная</p>
+                        </div>
+                      </li>
+                    </ol>
+                  </section>
+                  <section data-date="19" aria-label="19 ноября">
+                    <ol class="lessons">
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="09:00">09:00</time>–<time datetime="10:30">10:30</time></span>
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Операционные системы</h3>
+                          <p>Б-316 · Крылов Р. А.</p>
+                          <p class="event-kind kind-lab">Лабораторная</p>
+                        </div>
+                      </li>
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="12:50">12:50</time>–<time datetime="14:20">14:20</time></span>
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Математический анализ</h3>
+                          <p>А-204 · Смирнова Е. В.</p>
+                          <p class="event-kind kind-lab">Практика</p>
+                        </div>
+                      </li>
+                    </ol>
+                  </section>
+                  <section data-date="20" aria-label="20 ноября">
+                    <ol class="lessons">
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="09:00">09:00</time>–<time datetime="10:30">10:30</time></span>
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Экономика</h3>
+                          <p>А-116 · Орлова В. В.</p>
+                        </div>
+                      </li>
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="10:40">10:40</time>–<time datetime="12:10">12:10</time></span>
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Основы проектирования</h3>
+                          <p>Б-302 · Соколова И. М.</p>
+                        </div>
+                      </li>
+                    </ol>
+                  </section>
+                  <section data-date="21" aria-label="21 ноября">
+                    <div class="no-classes"><strong>Пар нет</strong><p>На этот день занятия не запланированы.</p></div>
+                  </section>
+                  <section data-date="22" aria-label="22 ноября">
+                    <div class="no-classes"><strong>Пар нет</strong><p>На этот день занятия не запланированы.</p></div>
+                  </section>
+                </div>
+                <div class="only-empty">
+                  <div class="no-classes"><strong>Пар нет</strong><p>На этот день занятия не запланированы.</p></div>
+                </div>
+                <div class="only-long">
+                  <ol class="lessons">
+                    <li class="lesson is-current">
+                      <div class="lesson-time">
+                        <span><time datetime="09:00">09:00</time>–<time datetime="10:30">10:30</time></span>
+                        <strong>Идёт пара</strong>
+                      </div>
+                      <div class="lesson-detail">
+                        <h3>Проектирование распределённых информационных систем и интеграция корпоративных сервисов</h3>
+                        <p>Б-307 · Преображенская-Соколова Александра Константиновна</p>
+                      </div>
+                      <div class="lesson-progress">
+                        <span>До конца 49 минут</span>
+                        <progress value="41" max="90" aria-label="Прошла 41 минута из 90"></progress>
+                      </div>
+                    </li>
+                    <li class="lesson">
+                      <div class="lesson-time">
+                        <span><time datetime="10:40">10:40</time>–<time datetime="12:10">12:10</time></span>
+                      </div>
+                      <div class="lesson-detail">
+                        <h3>Дискретная математика</h3>
+                        <p>А-204 · Петров А. Н.</p>
+                      </div>
+                    </li>
+                    <li class="lesson">
+                      <div class="lesson-time">
+                        <span><time datetime="12:50">12:50</time>–<time datetime="14:20">14:20</time></span>
+                      </div>
+                      <div class="lesson-detail">
+                        <h3>Компьютерные сети</h3>
+                        <p>Б-312 · Крылов Р. А.</p>
+                        <p class="event-kind kind-lab">Лабораторная</p>
+                      </div>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </section>
+
+            <section class="settings-view" aria-labelledby="settings-title">
+              <h1 class="view-title" id="settings-title">Настройки</h1>
+              <div class="settings-list">
+                <label class="settings-row">
+                  <span>Тёмная тема</span>
+                  <input class="visually-hidden" type="checkbox" id="dark-theme" role="switch">
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+                <button class="settings-row" type="button" popovertarget="logout">
+                  <span>Выйти из аккаунта</span><span aria-hidden="true">↗</span>
+                </button>
+              </div>
+              <section class="team" aria-labelledby="team-title">
+                <h2 id="team-title">Разработали приложение</h2>
+                <ol role="list">
+                  <li>Имя участника 1</li>
+                  <li>Имя участника 2</li>
+                  <li>Имя участника 3</li>
+                  <li>Имя участника 4</li>
+                  <li>Имя участника 5</li>
+                  <li>Имя участника 6</li>
+                </ol>
+              </section>
+              <div class="logout-confirm" id="logout" popover role="dialog" aria-labelledby="logout-title">
+                <h2 id="logout-title">Выйти из аккаунта?</h2>
+                <div class="confirm-actions">
+                  <button class="view-button" type="button" popovertarget="logout" popovertargetaction="hide" autofocus>Отмена</button>
+                  <a class="view-button" href="../1/10-window.html">Выйти</a>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <footer class="app-bottom">
+            <fieldset class="app-tabs">
+              <legend class="visually-hidden">Раздел приложения</legend>
+              <label class="app-tab">
+                <input class="visually-hidden" type="radio" name="app-tab" id="tab-home" checked>
+                <span class="tab-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m3 11 9-7 9 7M5 10v10h5v-5h4v5h5V10"/>
+                  </svg>
+                </span>
+                Главная
+              </label>
+              <label class="app-tab">
+                <input class="visually-hidden" type="radio" name="app-tab" id="tab-calendar">
+                <span class="tab-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="6" width="16" height="14" rx="2"/>
+                    <path d="M8 4v4m8-4v4M4 11h16m-12 4h2m4 0h2"/>
+                  </svg>
+                </span>
+                Календарь
+              </label>
+              <label class="app-tab">
+                <input class="visually-hidden" type="radio" name="app-tab" id="tab-settings">
+                <span class="tab-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 7h5m4 0h7M4 17h9m4 0h3"/>
+                    <circle cx="11" cy="7" r="2"/><circle cx="15" cy="17" r="2"/>
+                  </svg>
+                </span>
+                Настройки
+              </label>
+            </fieldset>
+            <div class="ios-home-bar-wrap" aria-hidden="true"><div class="ios-home-bar"></div></div>
+          </footer>
+        </div>
+      </div>
+
+      <aside class="spec-panel" aria-labelledby="variant-title">
+        <div>
+          <p class="spec-kicker">Главный экран · 10 / 10</p>
+          <h2 class="spec-title" id="variant-title">Пропуск в шапке</h2>
+          <p class="spec-lead">QR открывается на весь экран. Нижние вкладки ведут в календарь занятий и настройки.</p>
+        </div>
+        <div class="spec-grid">
+          <div class="spec-block">
+            <p class="spec-block-label">Палитра</p>
+            <div class="swatches">
+              <div class="swatch-row"><span class="swatch-dot" style="background:#F6F6F6"></span>#F6F6F6 Фон</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#CCD6D5"></span>#CCD6D5 Линии</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#006C69"></span>#006C69 Акцент</div>
+            </div>
+          </div>
+          <div class="spec-block">
+            <p class="spec-block-label">Типографика</p>
+            <p class="spec-block-val">Unbounded 17–23 px<br>Golos Text 13–16 px</p>
+          </div>
+          <div class="spec-block">
+            <p class="spec-block-label">Скругления</p>
+            <p class="spec-block-val">Шапка 0 px, QR 6 px</p>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

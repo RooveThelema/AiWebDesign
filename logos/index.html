@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Растительные логотипы приложения</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #232720;
+      background: #f0efe8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body { margin: 0; }
+
+    main {
+      width: min(1240px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: clamp(32px, 7vw, 84px) 0 48px;
+    }
+
+    header { margin-bottom: 26px; }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 5.5vw, 60px);
+      font-weight: 730;
+      line-height: 1.05;
+      letter-spacing: -0.055em;
+    }
+
+    header p {
+      margin: 12px 0 0;
+      font-size: 15px;
+      line-height: 1.5;
+      color: #545b4d;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 216px), 1fr));
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .variant {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid #d9dbd1;
+      border-radius: 15px;
+      background: #fcfcf8;
+    }
+
+    .stage {
+      display: grid;
+      grid-template-columns: 45px 1fr;
+      min-height: 156px;
+    }
+
+    .number {
+      display: grid;
+      place-items: center;
+      border-right: 1px solid #e0e2d7;
+      color: #4c5647;
+      background: #f2f3eb;
+      font: 600 15px ui-monospace, monospace;
+    }
+
+    .mark {
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      padding: 16px;
+    }
+
+    img { display: block; }
+
+    .details {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 12px 0 14px;
+      border-top: 1px solid #e0e2d7;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 670;
+      letter-spacing: -0.025em;
+    }
+
+    .download {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+      padding-inline: 4px;
+      color: #365343;
+      font: 600 13px ui-monospace, monospace;
+      text-decoration: none;
+    }
+
+    .download:hover { text-decoration: underline; }
+
+    .download:focus-visible {
+      outline: 2px solid #365343;
+      outline-offset: -4px;
+      border-radius: 6px;
+    }
+
+    .samples {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid #e0e2d7;
+    }
+
+    .sample {
+      display: grid;
+      place-items: center;
+      min-height: 42px;
+      background: #fff;
+    }
+
+    .sample-dark { background: #222724; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Логотипы приложения</h1>
+      <p>10 растительных знаков с предпросмотром при 24 px на светлом и тёмном фоне.</p>
+    </header>
+
+    <ol class="gallery" role="list">
+      <li class="variant">
+        <div class="stage">
+          <span class="number">01</span>
+          <div class="mark"><img src="01-sprout-book.svg" width="112" height="112" alt="Росток над раскрытой книгой"></div>
+        </div>
+        <div class="details">
+          <h2>Разворот</h2>
+          <a class="download" href="01-sprout-book.svg" download aria-label="Скачать SVG «Разворот»">SVG ↓</a>
+        </div>
+        <div class="samples" aria-hidden="true">
+          <div class="sample"><img src="01-sprout-book.svg" width="24" height="24" alt=""></div>
+          <div class="sample sample-dark"><img src="01-sprout-book.svg" width="24" height="24" alt=""></div>
+        </div>
+      </li>
+      <li class="variant">
+        <div class="stage">
+          <span class="number">02</span>
+          <div class="mark"><img src="02-ginkgo.svg" width="112" height="112" alt="Веерообразный лист на изогнутом черешке"></div>
+        </div>
+        <div class="details">
+          <h2>Гинкго</h2>
+          <a class="download" href="02-ginkgo.svg" download aria-label="Скачать SVG «Гинкго»">SVG ↓</a>
+        </div>
+        <div class="samples" aria-hidden="true">
+          <div class="sample"><img src="02-ginkgo.svg" width="24" height="24" alt=""></div>
+          <div class="sample sample-dark"><img src="02-ginkgo.svg" width="24" height="24" alt=""></div>
+        </div>
+      </li>
+      <li class="variant">
+        <div class="stage">
+          <span class="number">03</span>
+          <div class="mark"><img src="03-poppy.svg" width="112" height="112" alt="Светлый цветок на изогнутом стебле"></div>
+        </div>
+        <div class="details">
+          <h2>Мак</h2>
+          <a class="download" href="03-poppy.svg" download aria-label="Скачать SVG «Мак»">SVG ↓</a>
+        </div>
+        <div class="samples" aria-hidden="true">
+          <div class="sample"><img src="03-poppy.svg" width="24" height="24" alt=""></div>
+          <div class="sample sample-dark"><img src="03-poppy.svg" width="24" height="24" alt=""></div>
+        </div>
+      </li>
+      <li class="variant">
+        <div class="stage">
+          <span class="number">04</span>
+          <div class="mark"><img src="04-monstera.svg" width="112" height="112" alt="Бордовый лист с прорезями на розовом фоне"></div>
+        </div>
+        <div class="details">
+          <h2>Монстера</h2>
+          <a class="download" href="04-monstera.svg" download aria-label="Скачать SVG «Монстера»">SVG ↓</a>
+        </div>
+        <div class="samples" aria-hidden="true">
+          <div class="sample"><img src="04-monstera.svg" width="24" height="24" alt=""></div>
+          <div class="sample sample-dark"><img src="04-monstera.svg" width="24" height="24" alt=""></div>
+        </div>
+      </li>
+      <li class="variant">
+        <div class="stage">
+          <span class="number">05</span>
+          <div class="mark"><img src="05-spruce.svg" width="112" height="112" alt="Золотистая ель с треугольными ярусами"></div>
+        </div>
+        <div class="details">
+          <h2>Ель</h2>
+          <a class="download" href="05-spruce.svg" download aria-label="Скачать SVG «Ель»">SVG ↓</a>
+        </div>
+        <div class="samples" aria-hidden="true">
+          <div class="sample"><img src="05-spruce.svg" width="24" height="24" alt=""></div>
+          <div class="sample sample-dark"><img src="05-spruce.svg" width="24" height="24" alt=""></div>
+        </div>
+      </li>
+      <li class="variant">
+        <div class="stage">
+          <span class="number">06</span>
+          <div class="mark"><img src="06-fern.svg" width="112" height="112" alt="Ветка папоротника с персиковыми листочками"></div>
+        </div>
+        <div class="details">
+          <h2>Папоротник</h2>
+          <a class="download" href="06-fern.svg" download aria-label="Скачать SVG «Папоротник»">SVG ↓</a>
+        </div>
+        <div class="samples" aria-hidden="true">
+          <div class="sample"><img src="06-fern.svg" width="24" height="24" alt=""></div>
+          <div class="sample sample-dark"><img src="06-fern.svg" width="24" height="24" alt=""></div>
+        </div>
+      </li>
+      <li class="variant">
+        <div class="stage">
+          <span class="number">07</span>
+          <div class="mark"><img src="07-cattail.svg" width="112" height="112" alt="Два стебля рогоза среди длинных листьев"></div>
+        </div>
+        <div class="details">
+          <h2>Рогоз</h2>
+          <a class="download" href="07-cattail.svg" download aria-label="Скачать SVG «Рогоз»">SVG ↓</a>
+        </div>
+        <div class="samples" aria-hidden="true">
+          <div class="sample"><img src="07-cattail.svg" width="24" height="24" alt=""></div>
+          <div class="sample sample-dark"><img src="07-cattail.svg" width="24" height="24" alt=""></div>
+        </div>
+      </li>
+      <li class="variant">
+        <div class="stage">
+          <span class="number">08</span>
+          <div class="mark"><img src="08-clover.svg" width="112" height="112" alt="Три сиреневых листочка в форме сердец"></div>
+        </div>
+        <div class="details">
+          <h2>Клевер</h2>
+          <a class="download" href="08-clover.svg" download aria-label="Скачать SVG «Клевер»">SVG ↓</a>
+        </div>
+        <div class="samples" aria-hidden="true">
+          <div class="sample"><img src="08-clover.svg" width="24" height="24" alt=""></div>
+          <div class="sample sample-dark"><img src="08-clover.svg" width="24" height="24" alt=""></div>
+        </div>
+      </li>
+      <li class="variant">
+        <div class="stage">
+          <span class="number">09</span>
+          <div class="mark"><img src="09-flax.svg" width="112" height="112" alt="Пять синих лепестков вокруг оранжевой серединки"></div>
+        </div>
+        <div class="details">
+          <h2>Лён</h2>
+          <a class="download" href="09-flax.svg" download aria-label="Скачать SVG «Лён»">SVG ↓</a>
+        </div>
+        <div class="samples" aria-hidden="true">
+          <div class="sample"><img src="09-flax.svg" width="24" height="24" alt=""></div>
+          <div class="sample sample-dark"><img src="09-flax.svg" width="24" height="24" alt=""></div>
+        </div>
+      </li>
+      <li class="variant">
+        <div class="stage">
+          <span class="number">10</span>
+          <div class="mark"><img src="10-agave.svg" width="112" height="112" alt="Розетка из пяти заострённых терракотовых листьев"></div>
+        </div>
+        <div class="details">
+          <h2>Агава</h2>
+          <a class="download" href="10-agave.svg" download aria-label="Скачать SVG «Агава»">SVG ↓</a>
+        </div>
+        <div class="samples" aria-hidden="true">
+          <div class="sample"><img src="10-agave.svg" width="24" height="24" alt=""></div>
+          <div class="sample sample-dark"><img src="10-agave.svg" width="24" height="24" alt=""></div>
+        </div>
+      </li>
+    </ol>
+  </main>
+</body>
+</html>

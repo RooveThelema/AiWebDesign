@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Ель</title>
+  <rect width="128" height="128" rx="29" fill="#272A2C"/>
+  <path fill="#E7952D" d="M60 87h8v17h-8z"/>
+  <path fill="#FFD16A" d="M64 21 88 51H74l22 20H80l22 23H26l22-23H32l22-20H40Z"/>
+  <path fill="#E7952D" d="M64 21 88 51H74l22 20H80l22 23H64Z"/>
+</svg>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10 · Monolith Deep Teal — Экран входа ЮУТУ / УРК</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./studio.css">
+  <style>
+    /* Variant 10 Tokens: Monolith Deep Teal */
+    .phone-screen {
+      --canvas: #FFFFFF;
+      --monolith: #008A87;
+      --ink: #1E1E1E;
+      --muted: #646E6D;
+      --border: #D9E0DF;
+      --accent: #009F9B;
+      --error: #D12B2B;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: "Golos Text", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .mono-top {
+      background: var(--monolith);
+      color: #FFFFFF;
+      padding-bottom: 26px;
+    }
+
+    .mono-statusbar {
+      color: #FFFFFF;
+    }
+
+    .mono-hero {
+      padding: 14px 24px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .mono-logo-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .mono-badge {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #D7F4F2;
+    }
+
+    .mono-title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 25px;
+      line-height: 1.15;
+      font-weight: 700;
+    }
+
+    .mono-sub {
+      font-size: 13px;
+      line-height: 1.45;
+      color: #D7F4F2;
+      margin-top: -10px;
+    }
+
+    .mono-body {
+      flex: 1;
+      padding: 20px 24px 12px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Underline tab selector */
+    .org-radio {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .underline-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .underline-tab {
+      min-height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+
+    #org10-vuz:checked ~ .underline-tabs label[for="org10-vuz"],
+    #org10-col:checked ~ .underline-tabs label[for="org10-col"] {
+      color: var(--monolith);
+      border-bottom-color: var(--monolith);
+    }
+
+    #st-empty:checked ~ .studio-layout .underline-tab {
+      color: var(--muted) !important;
+      border-bottom-color: transparent !important;
+    }
+
+    .mono-form {
+      margin-top: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .mono-field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .mono-input {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #F6F6F6;
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--ink);
+    }
+
+    .mono-input:focus {
+      outline: none;
+      background: #FFFFFF;
+      border-color: var(--monolith);
+    }
+
+    .mono-error {
+      margin-top: 14px;
+      padding: 11px 13px;
+      border-radius: 8px;
+      background: #FFF1F1;
+      border: 1px solid #F2BCBC;
+      color: #8F1B1B;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    #st-error:checked ~ .studio-layout .mono-input {
+      border-color: var(--error);
+    }
+
+    .mono-long {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #F6F6F6;
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--muted);
+    }
+
+    /* Balanced horizontal action footer: left ghost, right primary pill */
+    .mono-footer {
+      margin-top: auto;
+      padding-top: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .mono-ghost-btn {
+      min-height: 48px;
+      padding: 0 14px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .mono-ghost-btn:hover {
+      color: var(--ink);
+      background: #F2F2F2;
+    }
+
+    .mono-pill-cta {
+      min-height: 50px;
+      padding: 0 28px;
+      border: none;
+      border-radius: 999px;
+      background: var(--monolith);
+      color: #FFFFFF;
+      font-family: "Unbounded", sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mono-pill-cta:hover {
+      background: #007471;
+    }
+
+    #st-empty:checked ~ .studio-layout .mono-pill-cta {
+      background: #CBD3D2;
+      color: #6B7574;
+    }
+  </style>
+</head>
+<body>
+  <div class="studio-stage">
+    <input class="state-radio" type="radio" name="preview-state" id="st-normal" checked>
+    <input class="state-radio" type="radio" name="preview-state" id="st-empty">
+    <input class="state-radio" type="radio" name="preview-state" id="st-error">
+    <input class="state-radio" type="radio" name="preview-state" id="st-long">
+
+    <header class="studio-topbar">
+      <div class="studio-crumb">
+        <a class="studio-back" href="./index.html">← Все 10 вариантов</a>
+        <div class="studio-nav-pills">
+          <a href="./01-tactile-thumb-dock.html">01</a>
+          <a href="./02-neo-swiss-editorial.html">02</a>
+          <a href="./03-dark-campus-obsidian.html">03</a>
+          <a href="./04-auto-parse-minimal.html">04</a>
+          <a href="./05-brutalist-utility-grid.html">05</a>
+          <a href="./06-split-campus-ribbon.html">06</a>
+          <a href="./07-bottom-sheet-stepped.html">07</a>
+          <a href="./08-cardless-atelier-line.html">08</a>
+          <a href="./09-keyboard-ready-compact.html">09</a>
+          <a class="is-current" href="./10-architectural-monolith.html">10</a>
+        </div>
+      </div>
+      <div class="state-switcher">
+        <span class="state-switcher-label">Состояние:</span>
+        <label class="state-pill" for="st-normal">Обычный</label>
+        <label class="state-pill" for="st-empty">Пусто</label>
+        <label class="state-pill" for="st-error">Ошибка ЭИОС</label>
+        <label class="state-pill" for="st-long">Длинное имя</label>
+      </div>
+    </header>
+
+    <main class="studio-layout">
+      <div class="phone-bezel">
+        <div class="phone-screen">
+          <div class="mono-top">
+            <div class="ios-statusbar mono-statusbar">
+              <span>09:41</span>
+              <div class="dynamic-island"></div>
+              <div class="ios-status-icons"><span>5G</span><span>100%</span></div>
+            </div>
+
+            <div class="mono-hero">
+              <div class="mono-logo-row">
+                <svg width="46" height="46" viewBox="0 0 128 128" role="img" aria-label="Клевер" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="128" height="128" rx="29" fill="#1E1E1E"/>
+                  <path d="M64 74c3 11 2 20-5 29" fill="none" stroke="#80CFCD" stroke-width="7" stroke-linecap="round"/>
+                  <path fill="#D7F4F2" d="M64 61c-5-3-17-12-18-22-1-10 10-16 18-8 8-8 19-2 18 8-1 10-13 19-18 22Z"/>
+                  <path fill="#80CFCD" d="M59 69c-5-7-16-18-26-15-10 2-12 14-4 20-1 10 10 16 18 11 6-4 10-11 12-16Z"/>
+                  <path fill="#D7F4F2" d="M69 69c5-7 16-18 26-15 10 2 12 14 4 20 1 10-10 16-18 11-6-4-10-11-12-16Z"/>
+                </svg>
+                <span class="mono-badge">Инобортех ЭИОС</span>
+              </div>
+              <h1 class="mono-title">Клевер</h1>
+              <p class="mono-sub">Расписание, пропуск по QR и уведомления о заменах.</p>
+            </div>
+          </div>
+
+          <div class="mono-body">
+            <input class="org-radio" type="radio" name="org-10" id="org10-vuz" checked>
+            <input class="org-radio" type="radio" name="org-10" id="org10-col">
+
+            <div class="underline-tabs">
+              <label class="underline-tab" for="org10-vuz">Университет (ЮУТУ)</label>
+              <label class="underline-tab" for="org10-col">Колледж (УРК)</label>
+            </div>
+
+            <div class="mono-form">
+              <div class="mono-field">
+                <label for="login-10">Логин</label>
+                <input id="login-10" class="mono-input only-normal" type="text" value="o.frolov@inueco.ru">
+                <input class="mono-input only-empty" type="text" value="" placeholder="Введите логин">
+                <input class="mono-input only-error" type="text" value="o.frolov@inueco.ru">
+                <input class="mono-input only-long" type="text" value="preobrazhenskiy-sokolov.artemiy@inueco.ru">
+              </div>
+
+              <div class="mono-field">
+                <label for="pass-10">Пароль</label>
+                <input id="pass-10" class="mono-input only-normal" type="password" value="••••••••••">
+                <input class="mono-input only-empty" type="password" value="" placeholder="Введите пароль">
+                <input class="mono-input only-error" type="password" value="•••••">
+                <input class="mono-input only-long" type="password" value="••••••••••••">
+              </div>
+            </div>
+
+            <div class="mono-error only-error">
+              Не удалось подтвердить учётную запись. Проверьте вкладку «Университет / Колледж» и пароль.
+            </div>
+
+            <div class="mono-long only-long">
+              Южно-Уральский технологический университет · Преображенский-Соколов А.И.
+            </div>
+
+            <div class="mono-footer">
+              <a class="mono-ghost-btn" href="#forgot">Забыли пароль?</a>
+              <button type="button" class="mono-pill-cta">
+                <span class="only-normal">Войти →</span>
+                <span class="only-empty">Войти</span>
+                <span class="only-error">Повтор →</span>
+                <span class="only-long">Войти →</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="ios-home-bar-wrap">
+            <div class="ios-home-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="spec-panel">
+        <div>
+          <span class="spec-kicker">Вариант 10 / 10 · Экран входа</span>
+          <h2 class="spec-title">Monolith Deep Teal</h2>
+          <p class="spec-lead">Чёткий фирменный монолит в цвете ЮУТУ (#008A87) с белым логотипом вверху, спокойными underline-вкладками «Университет / Колледж» и классическим горизонтальным низом (ссылка слева, капсула-кнопка справа).</p>
+        </div>
+
+        <div class="spec-grid">
+          <div class="spec-block">
+            <div class="spec-block-label">Палитра (3 роли)</div>
+            <div class="swatches">
+              <div class="swatch-row"><span class="swatch-dot" style="background:#FFFFFF"></span>#FFFFFF Форма</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#008A87"></span>#008A87 Монолит ЮУТУ</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#1E1E1E"></span>#1E1E1E / #D9E0DF</div>
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Типографика</div>
+            <div class="spec-block-val">
+              Display: Unbounded 700<br>
+              Body: Golos Text 400/600
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Скругления</div>
+            <div class="spec-block-val">
+              Верхний блок: 0px<br>
+              Поля ввода: 10px<br>
+              Бейдж: 4px · CTA: 999px
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Расположение кнопок</div>
+            <div class="spec-block-val">
+              Подчеркнутые вкладки под шапкой, внизу справа капсульная кнопка «Войти →» (не на всю ширину) + «Забыли пароль?» слева.
+            </div>
+          </div>
+        </div>
+
+        <div class="spec-notes">
+          <strong>Логотип «Клевер» (ЮУТУ-палитра):</strong> Угольный сквиркл <code>#1E1E1E</code> на тиловом монолите <code>#008A87</code>, листья в мятной паре <code>#D7F4F2</code> и <code>#80CFCD</code>.
+        </div>
+
+        <div class="spec-footer-nav">
+          <a class="spec-btn-link" href="./09-keyboard-ready-compact.html">← Вариант 09</a>
+          <a class="spec-btn-link is-primary" href="./index.html">Все 10 вариантов</a>
+        </div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

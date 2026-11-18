@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>07 · Пары в двух колонках — Клевер</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;650;700&family=Unbounded:wght@600;650;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../1/studio.css">
+  <link rel="stylesheet" href="./screen.css">
+</head>
+<body>
+  <div class="studio-stage">
+    <input class="state-radio" type="radio" name="preview-state" id="st-normal" checked>
+    <input class="state-radio" type="radio" name="preview-state" id="st-empty">
+    <input class="state-radio" type="radio" name="preview-state" id="st-error">
+    <input class="state-radio" type="radio" name="preview-state" id="st-long">
+
+    <header class="studio-topbar">
+      <div class="studio-crumb">
+        <a class="studio-back" href="./index.html">← Главный экран</a>
+        <nav class="studio-nav-pills" aria-label="Варианты главного экрана">
+          <a href="./01-monolith.html">01</a>
+          <a href="./02-checkpoint.html">02</a>
+          <a href="./03-ledger.html">03</a>
+          <a href="./04-week-first.html">04</a>
+          <a href="./05-night.html">05</a>
+          <a href="./06-current.html">06</a>
+          <a href="./07-split.html" class="is-current" aria-current="page">07</a>
+          <a href="./08-ticket.html">08</a>
+          <a href="./09-timeline.html">09</a>
+          <a href="./10-header-pass.html">10</a>
+        </nav>
+      </div>
+      <div class="state-switcher" role="group" aria-label="Состояние макета">
+        <label class="state-pill" for="st-normal">Обычный</label>
+        <label class="state-pill" for="st-empty">Нет пар</label>
+        <label class="state-pill" for="st-error">Ошибка ЭИОС</label>
+        <label class="state-pill" for="st-long">Длинные названия</label>
+      </div>
+    </header>
+
+    <main class="studio-layout">
+      <div class="phone-bezel">
+        <div class="phone-screen campus split">
+          <header class="campus-header">
+            <div class="ios-statusbar" aria-hidden="true">
+              <span>09:41</span>
+              <div class="dynamic-island"></div>
+              <div class="ios-status-icons"><span>5G</span><span>100%</span></div>
+            </div>
+            <div class="identity">
+              <img src="./clover.svg" width="34" height="34" alt="">
+              <strong>Клевер</strong>
+              <span>ЮУТУ · ИВТ-24</span>
+            </div>
+          </header>
+
+          <div class="app-scroll">
+            <section class="pass" aria-labelledby="pass-title">
+              <div class="pass-copy">
+                <h2 id="pass-title">QR-пропуск</h2>
+                <p>Образец пропуска</p>
+                <button type="button" popovertarget="pass-zoom">Увеличить QR</button>
+              </div>
+              <img src="./demo-pass.svg" width="88" height="88" alt="Демонстрационный QR-код">
+            </section>
+
+            <div class="qr-zoom" id="pass-zoom" popover role="dialog" aria-labelledby="zoom-title">
+              <h2 id="zoom-title">QR-пропуск</h2>
+              <img src="./demo-pass.svg" width="240" height="240" alt="Демонстрационный QR-код">
+              <p>Образец пропуска</p>
+              <button type="button" popovertarget="pass-zoom" popovertargetaction="hide">Закрыть</button>
+            </div>
+
+            <section class="day-area" aria-labelledby="schedule-title">
+              <div class="section-head">
+                <h1 id="schedule-title">Расписание</h1>
+                <p>16–22 ноября</p>
+              </div>
+              <fieldset class="week">
+                <legend class="visually-hidden">Выбрать день недели</legend>
+                <label class="day">
+                  <input type="radio" name="day" id="day-16" aria-label="Понедельник, 16 ноября">
+                  <span>Пн</span><b>16</b>
+                </label>
+                <label class="day">
+                  <input type="radio" name="day" id="day-17" aria-label="Вторник, 17 ноября">
+                  <span>Вт</span><b>17</b>
+                </label>
+                <label class="day">
+                  <input type="radio" name="day" id="day-18" aria-label="Среда, 18 ноября" checked>
+                  <span>Ср</span><b>18</b>
+                </label>
+                <label class="day">
+                  <input type="radio" name="day" id="day-19" aria-label="Четверг, 19 ноября">
+                  <span>Чт</span><b>19</b>
+                </label>
+                <label class="day">
+                  <input type="radio" name="day" id="day-20" aria-label="Пятница, 20 ноября">
+                  <span>Пт</span><b>20</b>
+                </label>
+                <label class="day">
+                  <input type="radio" name="day" id="day-21" aria-label="Суббота, 21 ноября">
+                  <span>Сб</span><b>21</b>
+                </label>
+                <label class="day">
+                  <input type="radio" name="day" id="day-22" aria-label="Воскресенье, 22 ноября">
+                  <span>Вс</span><b>22</b>
+                </label>
+              </fieldset>
+              <div class="schedule">
+                <p class="sync-note only-error">Нет связи с ЭИОС. Показано сохранённое расписание.</p>
+                <div class="regular-day">
+                  <section data-date="16" aria-label="16 ноября">
+                    <ol class="lessons">
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="09:00">09:00</time>–<time datetime="10:30">10:30</time></span>
+              
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Теория вероятностей</h3>
+                          <p>А-204 · Смирнова Е. В.</p>
+                        </div>
+                      </li>
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="10:40">10:40</time>–<time datetime="12:10">12:10</time></span>
+              
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Архитектура ЭВМ</h3>
+                          <p>Б-316 · Крылов Р. А.</p>
+                        </div>
+                      </li>
+                    </ol>
+                  </section>
+                  <section data-date="17" aria-label="17 ноября">
+                    <ol class="lessons">
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="10:40">10:40</time>–<time datetime="12:10">12:10</time></span>
+              
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Английский язык</h3>
+                          <p>А-212 · Морозова А. С.</p>
+                        </div>
+                      </li>
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="12:50">12:50</time>–<time datetime="14:20">14:20</time></span>
+              
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Алгоритмы</h3>
+                          <p>Б-302 · Петров А. Н.</p>
+                        </div>
+                      </li>
+                    </ol>
+                  </section>
+                  <section data-date="18" aria-label="18 ноября">
+                    <ol class="lessons">
+                      <li class="lesson is-current">
+                        <div class="lesson-time">
+                          <span><time datetime="09:00">09:00</time>–<time datetime="10:30">10:30</time></span>
+                          <strong>Идёт пара</strong>
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Базы данных</h3>
+                          <p>Б-307 · Соколова И. М.</p>
+                        </div>
+                        <div class="lesson-progress">
+                          <span>До конца 49 минут</span>
+                          <progress value="41" max="90" aria-label="Прошла 41 минута из 90"></progress>
+                        </div>
+                      </li>
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="10:40">10:40</time>–<time datetime="12:10">12:10</time></span>
+              
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Дискретная математика</h3>
+                          <p>А-204 · Петров А. Н.</p>
+                        </div>
+                      </li>
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="12:50">12:50</time>–<time datetime="14:20">14:20</time></span>
+              
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Компьютерные сети</h3>
+                          <p>Б-312 · Крылов Р. А.</p>
+                        </div>
+                      </li>
+                    </ol>
+                  </section>
+                  <section data-date="19" aria-label="19 ноября">
+                    <ol class="lessons">
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="09:00">09:00</time>–<time datetime="10:30">10:30</time></span>
+              
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Операционные системы</h3>
+                          <p>Б-316 · Крылов Р. А.</p>
+                        </div>
+                      </li>
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="12:50">12:50</time>–<time datetime="14:20">14:20</time></span>
+              
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Математический анализ</h3>
+                          <p>А-204 · Смирнова Е. В.</p>
+                        </div>
+                      </li>
+                    </ol>
+                  </section>
+                  <section data-date="20" aria-label="20 ноября">
+                    <ol class="lessons">
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="09:00">09:00</time>–<time datetime="10:30">10:30</time></span>
+              
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Экономика</h3>
+                          <p>А-116 · Орлова В. В.</p>
+                        </div>
+                      </li>
+                      <li class="lesson">
+                        <div class="lesson-time">
+                          <span><time datetime="10:40">10:40</time>–<time datetime="12:10">12:10</time></span>
+              
+                        </div>
+                        <div class="lesson-detail">
+                          <h3>Основы проектирования</h3>
+                          <p>Б-302 · Соколова И. М.</p>
+                        </div>
+                      </li>
+                    </ol>
+                  </section>
+                  <section data-date="21" aria-label="21 ноября">
+                    <div class="no-classes"><strong>Пар нет</strong><p>На этот день занятия не запланированы.</p></div>
+                  </section>
+                  <section data-date="22" aria-label="22 ноября">
+                    <div class="no-classes"><strong>Пар нет</strong><p>На этот день занятия не запланированы.</p></div>
+                  </section>
+                </div>
+                <div class="only-empty">
+                  <div class="no-classes"><strong>Пар нет</strong><p>На этот день занятия не запланированы.</p></div>
+                </div>
+                <div class="only-long">
+                  <ol class="lessons">
+                    <li class="lesson is-current">
+                      <div class="lesson-time">
+                        <span><time datetime="09:00">09:00</time>–<time datetime="10:30">10:30</time></span>
+                        <strong>Идёт пара</strong>
+                      </div>
+                      <div class="lesson-detail">
+                        <h3>Проектирование распределённых информационных систем и интеграция корпоративных сервисов</h3>
+                        <p>Б-307 · Преображенская-Соколова Александра Константиновна</p>
+                      </div>
+                      <div class="lesson-progress">
+                        <span>До конца 49 минут</span>
+                        <progress value="41" max="90" aria-label="Прошла 41 минута из 90"></progress>
+                      </div>
+                    </li>
+                    <li class="lesson">
+                      <div class="lesson-time">
+                        <span><time datetime="10:40">10:40</time>–<time datetime="12:10">12:10</time></span>
+              
+                      </div>
+                      <div class="lesson-detail">
+                        <h3>Дискретная математика</h3>
+                        <p>А-204 · Петров А. Н.</p>
+                      </div>
+                    </li>
+                    <li class="lesson">
+                      <div class="lesson-time">
+                        <span><time datetime="12:50">12:50</time>–<time datetime="14:20">14:20</time></span>
+              
+                      </div>
+                      <div class="lesson-detail">
+                        <h3>Компьютерные сети</h3>
+                        <p>Б-312 · Крылов Р. А.</p>
+                      </div>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="ios-home-bar-wrap" aria-hidden="true"><div class="ios-home-bar"></div></div>
+        </div>
+      </div>
+
+      <aside class="spec-panel" aria-labelledby="variant-title">
+        <div>
+          <p class="spec-kicker">Главный экран · 07 / 10</p>
+          <h2 class="spec-title" id="variant-title">Пары в двух колонках</h2>
+          <p class="spec-lead">Текущая пара занимает всю ширину. Остальные занятия видны рядом в двух столбцах.</p>
+        </div>
+        <div class="spec-grid">
+          <div class="spec-block">
+            <p class="spec-block-label">Палитра</p>
+            <div class="swatches">
+              <div class="swatch-row"><span class="swatch-dot" style="background:#F6F6F6"></span>#F6F6F6 Фон</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#CCD6D5"></span>#CCD6D5 Линии</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#006C69"></span>#006C69 Акцент</div>
+            </div>
+          </div>
+          <div class="spec-block">
+            <p class="spec-block-label">Типографика</p>
+            <p class="spec-block-val">Unbounded 16–22 px<br>Golos Text 12–15 px</p>
+          </div>
+          <div class="spec-block">
+            <p class="spec-block-label">Скругления</p>
+            <p class="spec-block-val">Пары 0 px, пропуск 12 px</p>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

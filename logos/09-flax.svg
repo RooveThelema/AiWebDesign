@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Лён</title>
+  <rect width="128" height="128" rx="29" fill="#C9EAF5"/>
+  <defs>
+    <path id="petal" d="M63 54c-7-2-14-8-15-16-1-9 6-16 15-16 11 0 17 8 15 17-1 6-7 11-15 15Z"/>
+  </defs>
+  <g fill="#234D7D">
+    <use href="#petal"/>
+    <use href="#petal" transform="rotate(72 64 64)"/>
+    <use href="#petal" transform="rotate(144 64 64)"/>
+    <use href="#petal" transform="rotate(216 64 64)"/>
+    <use href="#petal" transform="rotate(288 64 64)"/>
+  </g>
+  <circle cx="64" cy="64" r="7" fill="#BF6119"/>
+</svg>

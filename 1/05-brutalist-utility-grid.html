@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>05 · Brutalist Academic Terminal — Экран входа ЮУТУ / УРК</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Roboto:wght@400;500;700&family=Unbounded:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./studio.css">
+  <style>
+    /* Variant 05 Tokens: Brutalist Academic Utility */
+    .phone-screen {
+      --canvas: #F2F2F2;
+      --surface: #FFFFFF;
+      --ink: #000000;
+      --accent: #009F9B;
+      --beige: #DCBB89;
+      --error: #D12B2B;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .brut-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 10px 20px 14px;
+    }
+
+    .brut-ticker {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      background: #000000;
+      color: #FFFFFF;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .brut-ticker-badge {
+      background: var(--beige);
+      color: #000000;
+      padding: 2px 6px;
+    }
+
+    .brut-head {
+      margin-top: 20px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brut-title {
+      font-family: "Unbounded", sans-serif;
+      font-size: 28px;
+      line-height: 1.05;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+    }
+
+    /* Vertical stacked institution buttons with offset shadow */
+    .org-radio {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .brut-org-stack {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .brut-org-btn {
+      flex: 1;
+      min-height: 50px;
+      padding: 10px 12px;
+      background: var(--surface);
+      border: 2px solid #000000;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      cursor: pointer;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: #000000;
+      box-shadow: 3px 3px 0 #000000;
+      transition: transform 0.1s ease, background 0.1s ease;
+    }
+
+    .brut-org-btn span {
+      font-family: "Roboto", sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      margin-top: 2px;
+      opacity: 0.8;
+    }
+
+    #org5-vuz:checked ~ .brut-org-stack label[for="org5-vuz"],
+    #org5-col:checked ~ .brut-org-stack label[for="org5-col"] {
+      background: var(--accent);
+      color: #FFFFFF;
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 #000000;
+    }
+
+    #st-empty:checked ~ .studio-layout .brut-org-btn {
+      background: var(--surface) !important;
+      color: #000000 !important;
+      transform: none !important;
+      box-shadow: 3px 3px 0 #000000 !important;
+    }
+
+    .brut-form {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .brut-field label {
+      display: block;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .brut-input {
+      width: 100%;
+      min-height: 50px;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 2px solid #000000;
+      border-radius: 0;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 14px;
+      color: #000000;
+    }
+
+    .brut-input:focus {
+      outline: none;
+      box-shadow: 4px 4px 0 var(--accent);
+    }
+
+    .brut-error {
+      margin-top: 14px;
+      padding: 12px;
+      background: #FFE5E5;
+      border: 2px solid var(--error);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      line-height: 1.4;
+      color: #820F0F;
+    }
+
+    #st-error:checked ~ .studio-layout .brut-input {
+      border-color: var(--error);
+    }
+
+    .brut-long {
+      margin-top: 12px;
+      padding: 10px 12px;
+      background: #FFFFFF;
+      border: 2px solid #000000;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    /* Asymmetric bottom row with 64x64 circular thumb-corner CTA */
+    .brut-bottom-row {
+      margin-top: auto;
+      padding-top: 24px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brut-links {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brut-link {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: #000000;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .brut-thumb-action {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brut-action-word {
+      font-family: "Unbounded", sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .brut-circle-cta {
+      width: 64px;
+      height: 64px;
+      border-radius: 999px;
+      border: 2px solid #000000;
+      background: var(--accent);
+      color: #FFFFFF;
+      font-size: 26px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 4px 4px 0 #000000;
+    }
+
+    .brut-circle-cta:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 #000000;
+    }
+
+    #st-empty:checked ~ .studio-layout .brut-circle-cta {
+      background: #C4C4C4;
+      color: #555555;
+    }
+  </style>
+</head>
+<body>
+  <div class="studio-stage">
+    <input class="state-radio" type="radio" name="preview-state" id="st-normal" checked>
+    <input class="state-radio" type="radio" name="preview-state" id="st-empty">
+    <input class="state-radio" type="radio" name="preview-state" id="st-error">
+    <input class="state-radio" type="radio" name="preview-state" id="st-long">
+
+    <header class="studio-topbar">
+      <div class="studio-crumb">
+        <a class="studio-back" href="./index.html">← Все 10 вариантов</a>
+        <div class="studio-nav-pills">
+          <a href="./01-tactile-thumb-dock.html">01</a>
+          <a href="./02-neo-swiss-editorial.html">02</a>
+          <a href="./03-dark-campus-obsidian.html">03</a>
+          <a href="./04-auto-parse-minimal.html">04</a>
+          <a class="is-current" href="./05-brutalist-utility-grid.html">05</a>
+          <a href="./06-split-campus-ribbon.html">06</a>
+          <a href="./07-bottom-sheet-stepped.html">07</a>
+          <a href="./08-cardless-atelier-line.html">08</a>
+          <a href="./09-keyboard-ready-compact.html">09</a>
+          <a href="./10-architectural-monolith.html">10</a>
+        </div>
+      </div>
+      <div class="state-switcher">
+        <span class="state-switcher-label">Состояние:</span>
+        <label class="state-pill" for="st-normal">Обычный</label>
+        <label class="state-pill" for="st-empty">Пусто</label>
+        <label class="state-pill" for="st-error">Ошибка ЭИОС</label>
+        <label class="state-pill" for="st-long">Длинное имя</label>
+      </div>
+    </header>
+
+    <main class="studio-layout">
+      <div class="phone-bezel">
+        <div class="phone-screen">
+          <div class="ios-statusbar">
+            <span>09:41</span>
+            <div class="dynamic-island"></div>
+            <div class="ios-status-icons"><span>5G</span><span>100%</span></div>
+          </div>
+
+          <div class="brut-wrap">
+            <div class="brut-ticker">
+              <span>КЛЕВЕР · НЕОФИЦИАЛЬНЫЙ КЛИЕНТ</span>
+              <span class="brut-ticker-badge">API</span>
+            </div>
+
+            <div class="brut-head">
+              <h1 class="brut-title">Клевер<br>Вход</h1>
+              <svg width="48" height="48" viewBox="0 0 128 128" role="img" aria-label="Клевер" xmlns="http://www.w3.org/2000/svg">
+                <rect width="128" height="128" rx="29" fill="#000000"/>
+                <path d="M64 74c3 11 2 20-5 29" fill="none" stroke="#DCBB89" stroke-width="7" stroke-linecap="round"/>
+                <path fill="#009F9B" d="M64 61c-5-3-17-12-18-22-1-10 10-16 18-8 8-8 19-2 18 8-1 10-13 19-18 22Z"/>
+                <path fill="#DCBB89" d="M59 69c-5-7-16-18-26-15-10 2-12 14-4 20-1 10 10 16 18 11 6-4 10-11 12-16Z"/>
+                <path fill="#009F9B" d="M69 69c5-7 16-18 26-15 10 2 12 14 4 20 1 10-10 16-18 11-6-4-10-11-12-16Z"/>
+              </svg>
+            </div>
+
+            <input class="org-radio" type="radio" name="org-05" id="org5-vuz" checked>
+            <input class="org-radio" type="radio" name="org-05" id="org5-col">
+
+            <div class="brut-org-stack">
+              <label class="brut-org-btn" for="org5-vuz">
+                [01] ВУЗ ЮУТУ
+                <span>Бакалавриат / Магистратура</span>
+              </label>
+              <label class="brut-org-btn" for="org5-col">
+                [02] КОЛЛЕДЖ УРК
+                <span>Среднее проф. образование</span>
+              </label>
+            </div>
+
+            <div class="brut-form">
+              <div class="brut-field">
+                <label for="login-05">[01] ЛОГИН ИНОБОРТЕХ</label>
+                <input id="login-05" class="brut-input only-normal" type="text" value="n.lebedev@inueco.ru">
+                <input class="brut-input only-empty" type="text" value="" placeholder="stud-id / email">
+                <input class="brut-input only-error" type="text" value="n.lebedev@inueco.ru">
+                <input class="brut-input only-long" type="text" value="novokreschennykh.vladimir.2024@inueco.ru">
+              </div>
+
+              <div class="brut-field">
+                <label for="pass-05">[02] ПАРОЛЬ</label>
+                <input id="pass-05" class="brut-input only-normal" type="password" value="••••••••••">
+                <input class="brut-input only-empty" type="password" value="" placeholder="••••••••">
+                <input class="brut-input only-error" type="password" value="••••">
+                <input class="brut-input only-long" type="password" value="••••••••••••">
+              </div>
+            </div>
+
+            <div class="brut-error only-error">
+              ERR_AUTH: Отказ сервера Инобортех. Убедитесь, что выбран правильный филиал [01/02].
+            </div>
+
+            <div class="brut-long only-long">
+              ОРГ: ЮУТУ (Очное) · СТУДЕНТ: Новокрещенных-Александровский В.С.
+            </div>
+
+            <div class="brut-bottom-row">
+              <div class="brut-links">
+                <a class="brut-link" href="#forgot">Забыли пароль?</a>
+              </div>
+              <div class="brut-thumb-action">
+                <span class="brut-action-word">Войти</span>
+                <button type="button" class="brut-circle-cta" aria-label="Войти">→</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ios-home-bar-wrap">
+            <div class="ios-home-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="spec-panel">
+        <div>
+          <span class="spec-kicker">Вариант 05 / 10 · Экран входа</span>
+          <h2 class="spec-title">Brutalist Academic Utility</h2>
+          <p class="spec-lead">Бруталистская утилита с контрастным миксом углов: 0px у инпутов и переключателей, но крупная круглая кнопка «→» 64×64px в правом углу ровно под большой палец правой руки.</p>
+        </div>
+
+        <div class="spec-grid">
+          <div class="spec-block">
+            <div class="spec-block-label">Палитра (3 роли)</div>
+            <div class="swatches">
+              <div class="swatch-row"><span class="swatch-dot" style="background:#F2F2F2"></span>#F2F2F2 Бетон</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#000000"></span>#000000 Контур 2px</div>
+              <div class="swatch-row"><span class="swatch-dot" style="background:#009F9B"></span>#009F9B (+#DCBB89 тег)</div>
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Типографика</div>
+            <div class="spec-block-val">
+              Display: Unbounded 800<br>
+              Labels: IBM Plex Mono<br>
+              Subtext: Roboto
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Скругления</div>
+            <div class="spec-block-val">
+              Блоки и поля: 0px<br>
+              Кнопка входа: 999px (контрастная форма)
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block-label">Расположение кнопок</div>
+            <div class="spec-block-val">
+              Двойной верхний свитч с жёсткой тенью и асимметричная угловая кнопка-круг «→» 64×64 внизу справа.
+            </div>
+          </div>
+        </div>
+
+        <div class="spec-notes">
+          <strong>Логотип «Клевер» (ЮУТУ-палитра):</strong> Чёрный фон <code>#000000</code>, бирюза <code>#009F9B</code> и фирменный песочный оттенок ЮУТУ <code>--beige: #DCBB89</code> на левом листе и стебле.
+        </div>
+
+        <div class="spec-footer-nav">
+          <a class="spec-btn-link" href="./04-auto-parse-minimal.html">← Вариант 04</a>
+          <a class="spec-btn-link is-primary" href="./06-split-campus-ribbon.html">Вариант 06 →</a>
+        </div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>
